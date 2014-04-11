@@ -1,0 +1,16 @@
+{
+  "name": "ams-sdk",
+  "version": "0.0.0",
+  "description": "Client SDK for Azure Media Service",
+  "dependencies": {
+    "hyperquest": "^0.3.0",
+    "jshint": "^2.5.0",
+    "precommit-hook": "^0.4.1"
+  },
+  "config": {
+    "precommit": {
+      "lint": true,
+      "test": false
+    }
+  }
+}
