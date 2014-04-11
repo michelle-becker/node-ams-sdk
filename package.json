@@ -1,5 +1,5 @@
 {
-  "name": "ams-sdk",
+  "name": "node-ams-sdk",
   "version": "0.0.0",
   "description": "Client SDK for Azure Media Service",
   "main": "index.js",
@@ -8,9 +8,7 @@
     "url": "git@github.com:michelle-becker/node-ams-sdk.git"
   },
   "dependencies": {
-    "hyperquest": "^0.3.0",
-    "jshint": "^2.5.0",
-    "precommit-hook": "^0.4.1"
+    "hyperquest": "^0.3.0"
   },
   "config": {
     "precommit": {
@@ -20,9 +18,11 @@
   },
   "scripts": {
     "test": "mocha",
-    "lint": "jshint ./"
+    "lint": "jshint ."
   },
   "devDependencies": {
-    "chai": "~1.9.0"
+    "chai": "~1.9.0",
+    "jshint": "^2.5.0",
+    "precommit-hook": "^0.4.1"
   }
 }
