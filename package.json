@@ -2,6 +2,11 @@
   "name": "ams-sdk",
   "version": "0.0.0",
   "description": "Client SDK for Azure Media Service",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:michelle-becker/node-ams-sdk.git"
+  },
   "dependencies": {
     "hyperquest": "^0.3.0",
     "jshint": "^2.5.0",
@@ -12,5 +17,12 @@
       "lint": true,
       "test": false
     }
+  },
+  "scripts": {
+    "test": "mocha",
+    "lint": "jshint ./"
+  },
+  "devDependencies": {
+    "chai": "~1.9.0"
   }
 }
