@@ -8,7 +8,7 @@
     "url": "git@github.com:michelle-becker/node-ams-sdk.git"
   },
   "dependencies": {
-    "hyperquest": "^0.3.0"
+    "request": "^2.34.0"
   },
   "config": {
     "precommit": {
