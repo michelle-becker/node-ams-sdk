@@ -17,7 +17,7 @@
     }
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --recursive -R spec --ui bdd ",
     "lint": "jshint ."
   },
   "devDependencies": {
