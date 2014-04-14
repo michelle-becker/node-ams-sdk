@@ -4,7 +4,7 @@ var config     = require('../test-config')
 
 var amsService
 
-describe('AMS Service Import', function () {
+describe('AMS Service', function () {
 
   it('should exist', function(){
     
@@ -12,23 +12,29 @@ describe('AMS Service Import', function () {
 
   })
 
-})
+  describe('Properties and Methods', function(){
 
-describe('AMS Service Object', function(){
+    before(function(done){
 
+      //Check there is a config
+      expect(config).to.exist
+      done()
 
-  it('should create new serice with config', function(){
+    })
 
-    amsService = new AMSService(config)
-    expect(amsService).to.exist
+    it('should create new serice with config', function(){
+
+      amsService = new AMSService(config)
+      expect(amsService).to.exist
+
+    })
+
+    it('should have request property', function(){
+
+      expect(amsService).to.have.property('request')
+
+    })
+
 
   })
-
-  it('should have request property', function(){
-
-    expect(amsService).to.have.property('request')
-
-  })
-
-
 })
