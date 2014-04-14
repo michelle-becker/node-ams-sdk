@@ -12,9 +12,9 @@ describe('AMS Request', function () {
 
   })
 
-  describe('Properties and Methods', function(){
+  describe('Properties and Methods', function () {
 
-    before(function(done){
+    before(function (done) {
 
       //Check there is a config
       expect(config).to.exist
@@ -22,14 +22,14 @@ describe('AMS Request', function () {
 
     })
 
-    it('should create new request object with config', function(){
+    it('should create new request object with config', function () {
 
       amsRequest = new AMSRequest(config)
       expect(amsRequest).to.exist
 
     })
 
-    it('should have config property', function(){
+    it('should have config property', function () {
 
       expect(amsRequest).to.have.property('config')
       expect(amsRequest.config).to.have.property('mediaURI', "https://media.windows.net/API/")
@@ -39,16 +39,22 @@ describe('AMS Request', function () {
 
     })
 
-    it('should have method to set access token', function(){
+    it('should have method to set access token', function () {
 
       expect(amsRequest).to.have.property('setAccessToken')
 
     })
 
-    it('should set access token based on config', function(){
+    it('should set access token based on config', function (done) {
 
       expect(amsRequest).to.have.property('setAccessToken')
       
+      amsRequest.setAccessToken(function (err, res) {
+        expect(err).to.not.exist
+        expect(amsRequest).to.have.property('token')
+        expect(amsRequest).to.have.property('tokenExpires')
+        done()
+      })
     })
 
   })
