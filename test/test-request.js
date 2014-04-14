@@ -50,9 +50,13 @@ describe('AMS Request', function () {
       expect(amsRequest).to.have.property('setAccessToken')
       
       amsRequest.setAccessToken(function (err, res) {
+        
         expect(err).to.not.exist
         expect(amsRequest).to.have.property('token')
+        expect(amsRequest.token).to.exist
         expect(amsRequest).to.have.property('tokenExpires')
+        expect(amsRequest.tokenExpires).to.exist
+
         done()
       })
     })
