@@ -49,18 +49,6 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should list assets - cb ', function (done) {
-
-      amsService.listAssets(function (err, res) {
-
-        expect(err).to.not.exist
-        expect(res).to.exist
-        expect(res.body).to.exist
-
-        done()
-      })
-    })
-
     it('should list assets - stream ', function (done) {
 
       var data = ''
@@ -74,7 +62,35 @@ describe('AMS Service', function () {
         done()
       })
       .on('end', function(){
+
         expect(data).to.exist
+        try {
+          data = JSON.parse(data)
+          expect(data).to.not.have.property('error')
+        } catch (e){
+          expect(e).to.not.exist
+        }
+        done()
+      })
+    })
+
+    it('should list assets - cb ', function (done) {
+
+      amsService.listAssets(function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res).to.exist
+        expect(res.body).to.exist
+
+        try {
+
+          var data = JSON.parse(res.body)
+          expect(data).to.not.have.property('error')
+
+        } catch (e){
+          expect(e).to.not.exist
+        }
+        
         done()
       })
     })
