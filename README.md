@@ -32,15 +32,15 @@ If you already have your ams token, then you can specify it in your config like
 }
 ```
 
-If you do not have this, then you will need to supply the "client_id" and "client_secrect" in your config. Before you make subsequent requests, you will need to set the access token by calling the method "setToken"
+If you do not have this, then you will need to supply the "client_id" and "client_secrect" in the config. Before you make subsequent requests, you will need to set the access token by calling the method "setToken"
 
 ```
 amsService.setToken( function (err) {
-    //check for your error
-    //do other stuff. no rest returned. you will not need to use the token directly
+    //check for error
+    //do other stuff. no response returned.
 }
 ```
-Calling this will internally set the token as in internal to the object, and it will be used on subsequent requests.
+Calling this will set the token as in internal property to be used on subsequent requests.
 
 ##### Azure Media Services Resources Provided
 
