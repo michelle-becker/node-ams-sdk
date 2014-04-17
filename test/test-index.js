@@ -13,7 +13,7 @@ describe('AMS Service', function () {
 
   })
 
-  describe('Properties and Methods', function(){
+  describe('Instantiation', function(){
 
     before(function(done){
 
@@ -48,6 +48,9 @@ describe('AMS Service', function () {
 
       })
     })
+  })
+
+  describe('Assets', function (){
 
     it('should list assets - stream ', function (done) {
 
@@ -251,6 +254,36 @@ describe('AMS Service', function () {
         expect(res.statusCode).to.eql(204)
         expect(res.body).to.eql('')
 
+        done()
+      })
+    })
+
+    it('should get asset metadata - cb', function (done) {
+
+      amsService.getAssetMetadata(assetId, function(err, res){
+
+        expect(err).to.not.exist
+        expect(res.statusCode).to.eql(204)
+        expect(res.body).to.eql('')
+
+        done()
+      })
+    })
+
+    it('should get asset metadata - stream', function (done) {
+
+      var data = ''
+      
+      amsService.getAssetMetadata(assetId)
+      .on('data', function(d){
+        data += d
+      })
+      .on('error', function (e) {
+        expect(err).to.not.exist
+        done()
+      })
+      .on('end', function () {
+        expect(data).to.eql('')
         done()
       })
     })
