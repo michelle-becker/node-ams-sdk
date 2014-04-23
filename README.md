@@ -95,6 +95,10 @@ A callback is required. No streaming out of a create.
 
 **removeAsset(assetId, cb)**
 
-Requires an assetId and a callback. No streaming. 
+Requires an assetId and a callback. No streaming.
+
+**getAssetMetadata(assetId, [cb])**
+
+Requires an assetId. Callback is optional. Will stream without callback. Will link up the data that is in blob storage to the supplied asset. If it works, this will return a status code of 204 with no data.
 
 
