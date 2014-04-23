@@ -4,6 +4,7 @@ var config     = require('../test-config')
 
 var amsService
 var assetId
+var accessPolicyId
 
 describe('AMS Service', function () {
 
@@ -360,6 +361,182 @@ describe('AMS Service', function () {
         done()
       })
     })
+  })
+  
+  describe('Access Policies', function () { 
 
+    it('should create an access policy', function (done) {
+
+      var accessPolicy = {
+        Name: 'Test',
+        DurationInMinutes: 60
+      }
+
+      amsService.createAccessPolicy(accessPolicy, function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res).to.exist
+        expect(res.statusCode).to.eql(201)
+        expect(res.body).to.exist
+
+        try {
+          var data = JSON.parse(res.body)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.keys([
+          "__metadata",
+          "Id",
+          "Created",
+          "LastModified",
+          "Name",
+          "DurationInMinutes",
+          "Permissions"
+        ])
+
+        accessPolicyId = data.d.Id
+
+        done()
+      })
+    })
+
+    it('should list all access policies - cb', function (done){
+
+      amsService.listAccessPolicies(function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res).to.exist
+        expect(res.statusCode).to.eql(200)
+
+        try {
+          var data = JSON.parse(res.body)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results).to.exist
+
+        done()
+      })
+    })
+
+    it('should list all access policies - stream', function (done){
+
+      var data = ''
+
+      amsService.listAccessPolicies()
+      .on('data', function(d){ 
+        data += d 
+      })
+      .on('error', function(e){ 
+        expect(e).to.not.exist
+      })
+      .on('end', function(){
+
+        try {
+          data = JSON.parse(data)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results).to.exist
+
+        done();
+
+      })
+    })
+
+    it('should get an access policy - cb', function (done){
+
+      amsService.getAccessPolicy( accessPolicyId, function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res).to.exist
+        expect(res.statusCode).to.eql(200)
+
+        try {
+          var data = JSON.parse(res.body)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.keys([
+          "__metadata",
+          "Id",
+          "Created",
+          "LastModified",
+          "Name",
+          "DurationInMinutes",
+          "Permissions"
+        ])
+
+        done()
+      })
+    })
+
+    it('should get an access policy - stream', function (done){
+
+      var data = ''
+
+      amsService.getAccessPolicy(accessPolicyId)
+      .on('data', function(d){ 
+        data += d 
+      })
+      .on('error', function(e){ 
+        expect(e).to.not.exist
+      })
+      .on('end', function(){
+
+        try {
+          data = JSON.parse(data)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.keys([
+          "__metadata",
+          "Id",
+          "Created",
+          "LastModified",
+          "Name",
+          "DurationInMinutes",
+          "Permissions"
+        ])
+
+        done();
+
+      })
+    })
+
+    it.skip('should not list any access policies for the asset with out locator - cb', function (done) {
+
+      amsService.listAssetAccessPolicies( assetId, function (err, res) {
+        console.log(err, res)
+        done()
+      })
+    })
+
+  })
+
+  describe('Locators', function(){
+    
   })
 })
