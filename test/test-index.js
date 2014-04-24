@@ -1,10 +1,13 @@
 var expect     = require('chai').expect
+var moment     = require('moment')
 var AMSService = require('../')
 var config     = require('../test-config')
+
 
 var amsService
 var assetId
 var accessPolicyId
+var locatorId
 
 describe('AMS Service', function () {
 
@@ -363,7 +366,40 @@ describe('AMS Service', function () {
     })
   })
   
-  describe('Access Policies', function () { 
+  describe('Access Policies', function () {
+
+    before(function (done) {
+      
+      //Create an asset
+      
+      amsService.createAsset(function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.statusCode).to.eql(201)
+
+        var data = JSON.parse(res.body)
+
+        assetId = data.d.Id
+
+        done()
+      })
+    
+    })
+
+    after(function (done) {
+
+      // Remove an asset
+
+      amsService.removeAsset(assetId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.statusCode).to.eql(204)
+        expect(res.body).to.eql('')
+
+        done()
+      })
+
+    })
 
     it('should create an access policy', function (done) {
 
@@ -526,17 +562,107 @@ describe('AMS Service', function () {
       })
     })
 
-    it.skip('should not list any access policies for the asset with out locator - cb', function (done) {
+    it('should not list any access policies for the asset with out locator - cb', function (done) {
 
       amsService.listAssetAccessPolicies( assetId, function (err, res) {
-        console.log(err, res)
+        //console.log(err, res.body)
         done()
+      })
+    })
+
+    it('should remove an accessPolicy', function (done) {
+
+      amsService.removeAccessPolicy(accessPolicyId, function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res.statusCode).to.eql(204)
+        
+        done()
+
       })
     })
 
   })
 
   describe('Locators', function(){
+
+    before(function (done) {
+      
+      //Create an asset
+      
+      amsService.createAsset(function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.statusCode).to.eql(201)
+
+        var data = JSON.parse(res.body)
+        assetId  = data.d.Id
+
+        var accessPolicy = { Name: 'Test', DurationInMinutes: 60 }
+
+        amsService.createAccessPolicy(accessPolicy, function (err, res) {
+
+          expect(err).to.not.exist
+          expect(res.statusCode).to.eql(201)
+
+          var data        = JSON.parse(res.body)
+          accessPolicyId  = data.d.Id
+
+          done()
+        })
+      })
     
+    })
+
+    after(function (done) {
+
+      // Remove an asset
+
+      amsService.removeAsset(assetId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.statusCode).to.eql(204)
+        
+        amsService.removeAccessPolicy(accessPolicyId, function (err, res) {
+
+          done()
+        })
+      })
+
+    })
+
+    it('should create a locator for an asset and access policy', function (done) {
+
+      
+
+      var locator = {
+        AccessPolicyId:     accessPolicyId,
+        AssetId:            assetId,
+        StartTime:          moment.utc().subtract('minutes', 5).format('M/D/YYYY hh:mm:ss A'),
+        Type:               1,
+        Name:               'TestLocator',
+        ExpirationDateTime: moment.utc().add('minutes', 10)
+      }
+
+      amsService.createLocator(locator, function (err, res){
+        
+        expect(err).to.not.exist
+        expect(res).to.exist
+        console.log(res.body)
+        expect(res.statusCode).to.eql(200)
+
+        try {
+          var data = JSON.parse(res.body)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data).to.not.have.property('error')
+        done()
+      })
+    })
   })
 })
