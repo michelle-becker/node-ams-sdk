@@ -598,7 +598,7 @@ describe('AMS Service', function () {
         var data = JSON.parse(res.body)
         assetId  = data.d.Id
 
-        var accessPolicy = { Name: 'Test', DurationInMinutes: 60 }
+        var accessPolicy = { Name: 'Test', DurationInMinutes: 60, Permissions: 1 }
 
         amsService.createAccessPolicy(accessPolicy, function (err, res) {
 
@@ -633,23 +633,24 @@ describe('AMS Service', function () {
 
     it('should create a locator for an asset and access policy', function (done) {
 
+      var expires = new Date()
+      expires.setMinutes(expires.getMinutes() + 10)
       
-
       var locator = {
         AccessPolicyId:     accessPolicyId,
         AssetId:            assetId,
-        StartTime:          moment.utc().subtract('minutes', 5).format('M/D/YYYY hh:mm:ss A'),
-        Type:               1,
-        Name:               'TestLocator',
-        ExpirationDateTime: moment.utc().add('minutes', 10)
+        StartTime:          moment.utc().format('MM/DD/YYYY hh:mm:ss A'),
+        Type:               2,
+        //Name:               'TestLocator',
+        //ExpirationDateTime: expires.getTime()
       }
-
+      
       amsService.createLocator(locator, function (err, res){
         
         expect(err).to.not.exist
         expect(res).to.exist
-        console.log(res.body)
-        expect(res.statusCode).to.eql(200)
+
+        expect(res.statusCode).to.eql(201)
 
         try {
           var data = JSON.parse(res.body)
