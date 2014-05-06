@@ -1,9 +1,10 @@
-### node-ams-sdk
+node-ams-sdk
+============
 
 * Provides lightweight wrapper around Azure Media Services REST API
 
 
-##### Usage 
+### Usage 
 
 
 ```
@@ -42,9 +43,10 @@ amsService.setToken( function (err) {
 ```
 Calling this will set the token as in internal property to be used on subsequent requests.
 
-##### Azure Media Services Resources Provided
+### Azure Media Services Resources Provided
 
-###### Assets
+#### Assets
+-----------
 
 There are 5 methods that you can call on an assets resource. Internally, they will make the requests to Azure Media Services and return to you the response
 
@@ -95,6 +97,80 @@ A callback is required. No streaming out of a create.
 
 **removeAsset(assetId, cb)**
 
-Requires an assetId and a callback. No streaming. 
+Requires an assetId and a callback. No streaming.
+
+**getAssetMetadata(assetId, [cb])**
+
+Requires an assetId. Callback is optional. Will stream without callback. Will link up the data that is in blob storage to the supplied asset. If it works, this will return a status code of 204 with no data.
 
 
+#### Access Policies
+---------------------
+
+**listAccessPolicies([cb])**
+
+Takes an optional callback. Will list all access policies - streaming if no cb.
+
+**listAssetAccessPolicies(assetId, [cb])**
+
+Requires an assetId, Optional callback. Will list all access policies for a given asset - streaming if no cb.
+
+**getAccessPolicy(accessPolicyId, [cb])**
+
+Requires an accessPolicyId, Optional callback. Will return details about selected access policy - streaming if no cb.
+
+**createAccessPolicy(data, cb)**
+
+Requires data and callback. Will create a new access policy. Allowed data properties are:
+
+```
+Name
+DurationInMinutes
+Permissions
+```
+
+**removeAccessPolicy(accessPolicyId, cb)**
+
+Requires accessPolicyId, and callback. Will remove existing access policy.
+
+#### Locators
+-------------
+
+**listLocators([cb])**
+
+Takes an optional callback. Will list all locators - streaming if no cb.
+
+**listAssetLocators(assetId, [cb])**
+
+Requires an assetId, Optional callback. Will list all locators for a given asset - streaming if no cb.
+
+**getLocator(locatorId, [cb])**
+
+Requires an locatorId, Optional callback. Will return details about selected locator - streaming if no cb.
+
+**createLocator(data, cb)**
+
+Requires data and callback. Will create a new locator. Allowed data properties are:
+
+```
+AccessPolicyId
+AssetId
+StartTime (Format: 'MM/DD/YYYY hh:mm:ss A')
+Type
+Name
+ExpirationDateTime (Format: 'MM/DD/YYYY hh:mm:ss A')
+```
+
+**updateLocator(locatorId, data, cb)**
+
+Requires locatorId, data, and callback. Will upate an exisiting locator. Allowed data properties are:
+
+```
+StartTime (Format: 'MM/DD/YYYY hh:mm:ss A')
+Name
+ExpirationDateTime (Format: 'MM/DD/YYYY hh:mm:ss A')
+```
+
+**removeLocator(locatorId, cb)**
+
+Requires a locatorId and a callback. Will remove selected locator
