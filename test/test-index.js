@@ -618,14 +618,24 @@ describe('AMS Service', function () {
 
       // Remove an asset
 
-      amsService.removeAsset(assetId, function (err, res){
+      amsService.removeLocator(locatorId, function (err, res){
 
         expect(err).to.not.exist
         expect(res.statusCode).to.eql(204)
         
         amsService.removeAccessPolicy(accessPolicyId, function (err, res) {
 
-          done()
+          expect(err).to.not.exist
+          expect(res.statusCode).to.eql(204)
+
+          amsService.removeAsset(assetId, function (err, res){
+
+            expect(err).to.not.exist
+            console.log(res.body)
+            expect(res.statusCode).to.eql(204)
+
+            done()
+          })
         })
       })
 
@@ -641,15 +651,15 @@ describe('AMS Service', function () {
         AssetId:            assetId,
         StartTime:          moment.utc().format('MM/DD/YYYY hh:mm:ss A'),
         Type:               2,
-        //Name:               'TestLocator',
-        //ExpirationDateTime: expires.getTime()
+        Name:               'TestLocator',
+        ExpirationDateTime: moment.utc().add('d', 1).format('MM/DD/YYYY hh:mm:ss A')
       }
       
       amsService.createLocator(locator, function (err, res){
         
         expect(err).to.not.exist
         expect(res).to.exist
-
+        
         expect(res.statusCode).to.eql(201)
 
         try {
@@ -662,7 +672,230 @@ describe('AMS Service', function () {
 
         expect(data).to.have.property('d')
         expect(data).to.not.have.property('error')
+        expect(data.d).to.have.keys([
+          '__metadata',
+          'AccessPolicy',
+          'Asset',
+          'Id',
+          'ExpirationDateTime',
+          'Type',
+          'Path',
+          'BaseUri',
+          'ContentAccessComponent',
+          'AccessPolicyId',
+          'AssetId',
+          'StartTime',
+          'Name'
+        ])
+
+        locatorId = data.d.Id
+
         done()
+
+      })
+    })
+
+    it('should list locators - cb', function (done) {
+
+      amsService.listLocators(function (err, res) { 
+        
+        expect(err).to.not.exist
+        expect(res).to.exist
+        expect(res.statusCode).to.eql(200)
+        
+        try {
+          var data = JSON.parse(res.body)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results).to.not.be.empty
+
+        done()
+      
+      })
+    })
+
+    it('should list locators - stream', function (done) {
+
+      var data = ''
+
+      amsService.listLocators()
+      .on('data', function(d){ 
+        data += d 
+      })
+      .on('error', function(e){ 
+        expect(e).to.not.exist
+      })
+      .on('end', function(){
+
+        try {
+          data = JSON.parse(data)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results).to.not.be.empty
+
+        done()
+      })
+    })
+
+    it('should get locator - cb', function (done) {
+
+      amsService.getLocator(locatorId, function (err, res) { 
+        
+        expect(err).to.not.exist
+        expect(res).to.exist
+
+        expect(res.statusCode).to.eql(200)
+        
+        try {
+          var data = JSON.parse(res.body)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data).to.not.have.property('error')
+        expect(data.d).to.have.keys([
+          '__metadata',
+          'AccessPolicy',
+          'Asset',
+          'Id',
+          'ExpirationDateTime',
+          'Type',
+          'Path',
+          'BaseUri',
+          'ContentAccessComponent',
+          'AccessPolicyId',
+          'AssetId',
+          'StartTime',
+          'Name'
+        ])
+
+        done()
+      
+      })
+    })
+
+    it('should get locator - stream', function (done) {
+
+      var data = ''
+
+      amsService.getLocator(locatorId)
+      .on('data', function(d){ 
+        data += d 
+      })
+      .on('error', function(e){ 
+        expect(e).to.not.exist
+      })
+      .on('end', function(){
+
+        try {
+          data = JSON.parse(data)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+        
+        expect(data).to.have.property('d')
+        expect(data).to.not.have.property('error')
+        expect(data.d).to.have.keys([
+          '__metadata',
+          'AccessPolicy',
+          'Asset',
+          'Id',
+          'ExpirationDateTime',
+          'Type',
+          'Path',
+          'BaseUri',
+          'ContentAccessComponent',
+          'AccessPolicyId',
+          'AssetId',
+          'StartTime',
+          'Name'
+        ])
+
+        done()
+      })
+    })
+
+    it('should get locator for asset - cb', function (done) {
+
+      amsService.listAssetLocators(assetId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res).to.exist
+        expect(res.statusCode).to.eql(200)
+        
+        try {
+          var data = JSON.parse(res.body)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results).to.not.be.empty
+
+        done()
+
+      })
+    })
+
+    it('should list locators for asset - stream', function (done) {
+
+      var data = ''
+
+      amsService.listAssetLocators(assetId)
+      .on('data', function(d){ 
+        data += d 
+      })
+      .on('error', function(e){ 
+        expect(e).to.not.exist
+      })
+      .on('end', function(){
+
+        try {
+          data = JSON.parse(data)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results).to.not.be.empty
+
+        done()
+      })
+    })
+
+    it('should update locator', function (done) {
+
+      amsService.updateLocator(locatorId, {Name: 'New Name'}, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res).to.exist
+        expect(res.statusCode).to.eql(204)
+
+        done()
+
       })
     })
   })
