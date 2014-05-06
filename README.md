@@ -46,6 +46,7 @@ Calling this will set the token as in internal property to be used on subsequent
 ### Azure Media Services Resources Provided
 
 #### Assets
+-----------
 
 There are 5 methods that you can call on an assets resource. Internally, they will make the requests to Azure Media Services and return to you the response
 
@@ -104,6 +105,7 @@ Requires an assetId. Callback is optional. Will stream without callback. Will li
 
 
 #### Access Policies
+---------------------
 
 **listAccessPolicies([cb])**
 
@@ -132,6 +134,7 @@ Permissions
 Requires accessPolicyId, and callback. Will remove existing access policy.
 
 #### Locators
+-------------
 
 **listLocators([cb])**
 
