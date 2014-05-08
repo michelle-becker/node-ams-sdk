@@ -899,4 +899,49 @@ describe('AMS Service', function () {
       })
     })
   })
+
+  describe('Encoding Job', function (){
+
+    before(function (done) {
+      
+      //Create an asset
+      
+      amsService.createAsset(function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.statusCode).to.eql(201)
+
+        var data = JSON.parse(res.body)
+
+        assetId = data.d.Id
+
+        done()
+      })
+    
+    })
+
+    after(function (done) {
+
+      // Remove an asset
+
+      amsService.removeAsset(assetId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.statusCode).to.eql(204)
+        expect(res.body).to.eql('')
+
+        done()
+      })
+
+    })
+
+    it.skip('should create an encoding job', function (done){
+
+      amsService.createEncodingJob('Test', assetId, "H264 Broadband 720p", function (err, res) {
+
+        console.log(err, res)
+        done()
+      })
+    })
+  })
 })
