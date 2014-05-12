@@ -90,6 +90,7 @@ describe('AMS Service', function () {
         expect(data.d.results).to.exist
 
         done()
+
       })
     })
 
@@ -115,6 +116,7 @@ describe('AMS Service', function () {
         expect(data.d.results).to.exist
 
         done()
+
       })
     })
 
@@ -150,6 +152,7 @@ describe('AMS Service', function () {
         assetId = data.d.Id
 
         done()
+
       })
     })
 
@@ -193,6 +196,7 @@ describe('AMS Service', function () {
         expect(data.d.AlternateId).to.be.null
 
         done()
+
       })
     })
 
@@ -247,6 +251,7 @@ describe('AMS Service', function () {
         expect(data.d.AlternateId).to.be.null
 
         done()
+
       })
     })
 
@@ -259,6 +264,7 @@ describe('AMS Service', function () {
         expect(res.body).to.eql('')
 
         done()
+
       })
     })
 
@@ -271,6 +277,7 @@ describe('AMS Service', function () {
         expect(res.body).to.eql('')
 
         done()
+
       })
     })
 
@@ -300,6 +307,7 @@ describe('AMS Service', function () {
         expect(res.body).to.eql('')
 
         done()
+
       })
     })
 
@@ -325,6 +333,7 @@ describe('AMS Service', function () {
         expect(data.error.message.value).to.eql('Resource Asset not found')
 
         done()
+
       })
     })
 
@@ -362,6 +371,7 @@ describe('AMS Service', function () {
         expect(data.error.message.value).to.eql('Resource Asset not found')
 
         done()
+
       })
     })
   })
@@ -382,6 +392,7 @@ describe('AMS Service', function () {
         assetId = data.d.Id
 
         done()
+
       })
     
     })
@@ -397,6 +408,7 @@ describe('AMS Service', function () {
         expect(res.body).to.eql('')
 
         done()
+
       })
 
     })
@@ -437,6 +449,7 @@ describe('AMS Service', function () {
         accessPolicyId = data.d.Id
 
         done()
+
       })
     })
 
@@ -461,6 +474,7 @@ describe('AMS Service', function () {
         expect(data.d.results).to.exist
 
         done()
+
       })
     })
 
@@ -489,7 +503,7 @@ describe('AMS Service', function () {
         expect(data.d).to.have.property('results')
         expect(data.d.results).to.exist
 
-        done();
+        done()
 
       })
     })
@@ -522,6 +536,7 @@ describe('AMS Service', function () {
         ])
 
         done()
+
       })
     })
 
@@ -557,7 +572,7 @@ describe('AMS Service', function () {
           "Permissions"
         ])
 
-        done();
+        done()
 
       })
     })
@@ -609,6 +624,7 @@ describe('AMS Service', function () {
           accessPolicyId  = data.d.Id
 
           done()
+
         })
       })
     
@@ -635,6 +651,7 @@ describe('AMS Service', function () {
             expect(res.statusCode).to.eql(204)
 
             done()
+
           })
         })
       })
@@ -746,6 +763,7 @@ describe('AMS Service', function () {
         expect(data.d.results).to.not.be.empty
 
         done()
+
       })
     })
 
@@ -829,6 +847,7 @@ describe('AMS Service', function () {
         ])
 
         done()
+
       })
     })
 
@@ -883,6 +902,7 @@ describe('AMS Service', function () {
         expect(data.d.results).to.not.be.empty
 
         done()
+
       })
     })
 
@@ -916,6 +936,7 @@ describe('AMS Service', function () {
         assetId = data.d.Id
 
         done()
+
       })
     
     })
@@ -931,16 +952,35 @@ describe('AMS Service', function () {
         expect(res.body).to.eql('')
 
         done()
+
       })
 
     })
 
-    it.skip('should create an encoding job', function (done){
+    it('should kind of create an encoding job', function (done){
 
-      amsService.createEncodingJob('Test', assetId, "H264 Broadband 720p", function (err, res) {
+      var options = {
+        name: 'Test',
+        assetId: assetId,
+        encoding: "H264 Broadband 720p",
+        outputName: 'Test Output'
+      }
 
-        console.log(err, res)
+      amsService.createEncodingJob(options, function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+        
+        expect(data.error.message.value).to.eql("One or more input Assets are not currently useable in a job because: Asset " + assetId +  " has no file.")
+
         done()
+
       })
     })
   })
