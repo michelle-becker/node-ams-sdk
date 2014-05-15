@@ -174,3 +174,21 @@ ExpirationDateTime (Format: 'MM/DD/YYYY hh:mm:ss A')
 **removeLocator(locatorId, cb)**
 
 Requires a locatorId and a callback. Will remove selected locator
+
+#### Encoding Job
+-----------------
+
+**createEncodingJob(options, cb)**
+
+Requires an options object and a callback. Will create an encoding job for given asset. Options are as follows:
+
+```
+name       - The name of the job
+assetId    - The id of the asset to be encoded
+encoding   - String representation of encoding e.g. "H264 Broadband 720p"
+outputName - The name of the output asset
+```
+
+**getJobStatus(jobId, [cb])**
+
+Requires a jobId. Will return the status of the job. Will stream is optional callback is not provided
