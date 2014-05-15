@@ -188,3 +188,7 @@ assetId    - The id of the asset to be encoded
 encoding   - String representation of encoding e.g. "H264 Broadband 720p"
 outputName - The name of the output asset
 ```
+
+**getJobStatus(jobId, [cb])**
+
+Requires a jobId. Will return the status of the job. Will stream is optional callback is not provided
