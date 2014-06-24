@@ -11,8 +11,18 @@ var locatorId
 
 describe('AMS Service', function () {
 
+  before(function () {
+
+    expect(config).to.exist
+    expect(config.service).to.exist
+    expect(config.service.client_id).to.exist
+    expect(config.service.client_secret).to.exist
+    expect(config.testAssetId).to.exist
+
+  })
+
   it('should exist', function(){
-    
+
     expect(AMSService).to.exist
 
   })
@@ -29,7 +39,7 @@ describe('AMS Service', function () {
 
     it('should create new serice with config', function(){
 
-      amsService = new AMSService(config)
+      amsService = new AMSService(config.service)
       expect(amsService).to.exist
 
     })
@@ -56,6 +66,8 @@ describe('AMS Service', function () {
 
   describe('Assets', function (){
 
+    this.timeout(5000)
+
     it('should list assets - stream ', function (done) {
 
       var data = ''
@@ -81,9 +93,9 @@ describe('AMS Service', function () {
 
         } catch (e){
           expect(e).to.not.exist
-          
+
         }
-        
+
         expect(data).to.not.have.property('error')
         expect(data).to.have.property('d')
         expect(data.d).to.have.property('results')
@@ -120,8 +132,8 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should create an asset', function (done) { 
-      
+    it('should create an asset', function (done) {
+
       amsService.createAsset(function (err, res){
 
         expect(err).to.not.exist
@@ -156,8 +168,8 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should get new asset - cb', function (done){ 
-      
+    it('should get new asset - cb', function (done){
+
       amsService.getAsset(assetId, function (err, res){
 
         expect(err).to.not.exist
@@ -172,7 +184,7 @@ describe('AMS Service', function () {
           expect(e).to.not.exist
 
         }
-        
+
         expect(data).to.not.have.property('error')
         expect(data).to.have.property('d')
         expect(data.d).to.have.keys([
@@ -201,7 +213,7 @@ describe('AMS Service', function () {
     })
 
     it('should get new asset - stream', function (done) {
-      
+
       var data = ''
 
       amsService.getAsset(assetId)
@@ -225,9 +237,9 @@ describe('AMS Service', function () {
 
         } catch (e){
           expect(e).to.not.exist
-          
+
         }
-        
+
         expect(data).to.not.have.property('error')
         expect(data).to.have.property('d')
         expect(data.d).to.have.keys([
@@ -256,7 +268,7 @@ describe('AMS Service', function () {
     })
 
     it('should update an asset', function (done) {
-      
+
       amsService.updateAsset(assetId, {AlternateId:"2", Name: "Test Asset"}, function (err, res){
 
         expect(err).to.not.exist
@@ -284,7 +296,7 @@ describe('AMS Service', function () {
     it('should get asset metadata - stream', function (done) {
 
       var data = ''
-      
+
       amsService.getAssetMetadata(assetId)
       .on('data', function(d){
         data += d
@@ -326,7 +338,7 @@ describe('AMS Service', function () {
           expect(e).to.not.exist
 
         }
-        
+
         expect(data).to.have.property('error')
         expect(data.error).to.have.keys(['code', 'message'])
         expect(data.error.message).to.have.keys(['lang', 'value'])
@@ -375,13 +387,15 @@ describe('AMS Service', function () {
       })
     })
   })
-  
+
   describe('Access Policies', function () {
 
+    this.timeout(5000)
+
     before(function (done) {
-      
+
       //Create an asset
-      
+
       amsService.createAsset(function (err, res){
 
         expect(err).to.not.exist
@@ -394,7 +408,7 @@ describe('AMS Service', function () {
         done()
 
       })
-    
+
     })
 
     after(function (done) {
@@ -483,10 +497,10 @@ describe('AMS Service', function () {
       var data = ''
 
       amsService.listAccessPolicies()
-      .on('data', function(d){ 
-        data += d 
+      .on('data', function(d){
+        data += d
       })
-      .on('error', function(e){ 
+      .on('error', function(e){
         expect(e).to.not.exist
       })
       .on('end', function(){
@@ -545,10 +559,10 @@ describe('AMS Service', function () {
       var data = ''
 
       amsService.getAccessPolicy(accessPolicyId)
-      .on('data', function(d){ 
-        data += d 
+      .on('data', function(d){
+        data += d
       })
-      .on('error', function(e){ 
+      .on('error', function(e){
         expect(e).to.not.exist
       })
       .on('end', function(){
@@ -591,7 +605,7 @@ describe('AMS Service', function () {
 
         expect(err).to.not.exist
         expect(res.statusCode).to.eql(204)
-        
+
         done()
 
       })
@@ -601,10 +615,12 @@ describe('AMS Service', function () {
 
   describe('Locators', function(){
 
+    this.timeout(5000)
+
     before(function (done) {
-      
+
       //Create an asset
-      
+
       amsService.createAsset(function (err, res){
 
         expect(err).to.not.exist
@@ -627,7 +643,7 @@ describe('AMS Service', function () {
 
         })
       })
-    
+
     })
 
     after(function (done) {
@@ -638,7 +654,7 @@ describe('AMS Service', function () {
 
         expect(err).to.not.exist
         expect(res.statusCode).to.eql(204)
-        
+
         amsService.removeAccessPolicy(accessPolicyId, function (err, res) {
 
           expect(err).to.not.exist
@@ -662,7 +678,7 @@ describe('AMS Service', function () {
 
       var expires = new Date()
       expires.setMinutes(expires.getMinutes() + 10)
-      
+
       var locator = {
         AccessPolicyId:     accessPolicyId,
         AssetId:            assetId,
@@ -671,12 +687,12 @@ describe('AMS Service', function () {
         Name:               'TestLocator',
         ExpirationDateTime: moment.utc().add('d', 1).format('MM/DD/YYYY hh:mm:ss A')
       }
-      
+
       amsService.createLocator(locator, function (err, res){
-        
+
         expect(err).to.not.exist
         expect(res).to.exist
-        
+
         expect(res.statusCode).to.eql(201)
 
         try {
@@ -714,12 +730,12 @@ describe('AMS Service', function () {
 
     it('should list locators - cb', function (done) {
 
-      amsService.listLocators(function (err, res) { 
-        
+      amsService.listLocators(function (err, res) {
+
         expect(err).to.not.exist
         expect(res).to.exist
         expect(res.statusCode).to.eql(200)
-        
+
         try {
           var data = JSON.parse(res.body)
 
@@ -733,7 +749,7 @@ describe('AMS Service', function () {
         expect(data.d.results).to.not.be.empty
 
         done()
-      
+
       })
     })
 
@@ -742,10 +758,10 @@ describe('AMS Service', function () {
       var data = ''
 
       amsService.listLocators()
-      .on('data', function(d){ 
-        data += d 
+      .on('data', function(d){
+        data += d
       })
-      .on('error', function(e){ 
+      .on('error', function(e){
         expect(e).to.not.exist
       })
       .on('end', function(){
@@ -769,13 +785,13 @@ describe('AMS Service', function () {
 
     it('should get locator - cb', function (done) {
 
-      amsService.getLocator(locatorId, function (err, res) { 
-        
+      amsService.getLocator(locatorId, function (err, res) {
+
         expect(err).to.not.exist
         expect(res).to.exist
 
         expect(res.statusCode).to.eql(200)
-        
+
         try {
           var data = JSON.parse(res.body)
 
@@ -803,7 +819,7 @@ describe('AMS Service', function () {
         ])
 
         done()
-      
+
       })
     })
 
@@ -812,10 +828,10 @@ describe('AMS Service', function () {
       var data = ''
 
       amsService.getLocator(locatorId)
-      .on('data', function(d){ 
-        data += d 
+      .on('data', function(d){
+        data += d
       })
-      .on('error', function(e){ 
+      .on('error', function(e){
         expect(e).to.not.exist
       })
       .on('end', function(){
@@ -827,7 +843,7 @@ describe('AMS Service', function () {
           expect(e).to.not.exist
 
         }
-        
+
         expect(data).to.have.property('d')
         expect(data).to.not.have.property('error')
         expect(data.d).to.have.keys([
@@ -858,7 +874,7 @@ describe('AMS Service', function () {
         expect(err).to.not.exist
         expect(res).to.exist
         expect(res.statusCode).to.eql(200)
-        
+
         try {
           var data = JSON.parse(res.body)
 
@@ -881,10 +897,10 @@ describe('AMS Service', function () {
       var data = ''
 
       amsService.listAssetLocators(assetId)
-      .on('data', function(d){ 
-        data += d 
+      .on('data', function(d){
+        data += d
       })
-      .on('error', function(e){ 
+      .on('error', function(e){
         expect(e).to.not.exist
       })
       .on('end', function(){
@@ -922,30 +938,13 @@ describe('AMS Service', function () {
 
   describe('Encoding Job', function (){
 
+    this.timeout(5000)
+
     before(function (done) {
-      
+
       //Create an asset
-      
-      amsService.createAsset(function (err, res){
 
-        expect(err).to.not.exist
-        expect(res.statusCode).to.eql(201)
-
-        var data = JSON.parse(res.body)
-
-        assetId = data.d.Id
-
-        done()
-
-      })
-    
-    })
-
-    after(function (done) {
-
-      // Remove an asset
-
-      amsService.removeAsset(assetId, function (err, res){
+      amsService.getAssetMetadata(config.testAssetId, function(err, res){
 
         expect(err).to.not.exist
         expect(res.statusCode).to.eql(204)
@@ -957,13 +956,14 @@ describe('AMS Service', function () {
 
     })
 
-    it('should kind of create an encoding job', function (done){
+
+    it('should create a video encoding job', function (done){
 
       var options = {
-        name: 'Test',
-        assetId: assetId,
-        encoding: "H264 Broadband 720p",
-        outputName: 'Test Output'
+        name:       'Test_1',
+        assetId:    config.testAssetId,
+        encoding:   "H264 Broadband 720p",
+        outputName: 'Test_Output_1'
       }
 
       amsService.createEncodingJob(options, function (err, res) {
@@ -976,12 +976,117 @@ describe('AMS Service', function () {
         } catch (err) {
           expect(err).to.not.exist
         }
-        
-        expect(data.error.message.value).to.eql("One or more input Assets are not currently useable in a job because: Asset " + assetId +  " has no file.")
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property("InputMediaAssets")
+        expect(data.d).to.have.property('Tasks')
 
         done()
 
       })
     })
+
+    it('should create a thumbnails job', function (done){
+
+      var options = {
+        name:     'Test_1_Thumb',
+        assetId:  config.testAssetId,
+        encoding: 'Thumbnails',
+        value:    '00:00:05',
+        type:     'Jpeg'
+      }
+
+      amsService.createEncodingJob(options, function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+        console.log(res.body)
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property("InputMediaAssets")
+        expect(data.d).to.have.property('Tasks')
+
+        done()
+
+      })
+    })
+
+    it('should create multi task video encoding job', function (done){
+
+      var options = {
+        name: 'Test_2',
+        assetId: config.testAssetId,
+        tasks: [{
+          encoding:   "H264 Broadband 720p",
+          outputName: 'Test_2_Output_1',
+        },
+        {
+          encoding:   "H264 Broadband 1080p",
+          outputName: 'Test_2_Output_2',
+        }]
+      }
+
+      amsService.createMultiTaskJob(options, function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property("InputMediaAssets")
+        expect(data.d).to.have.property('Tasks')
+
+        done()
+
+      })
+    })
+
+    it('should create multi task video encoding and thumbnail job', function (done){
+
+      var options = {
+        name: 'Test_3',
+        assetId: config.testAssetId,
+        tasks: [{
+          encoding:   "H264 Broadband 720p",
+          outputName: 'Test_3_Output_1',
+        },
+        {
+          encoding:   "Thumbnails",
+          outputName: 'Test_3_Output_2',
+          value:      '00:00:05',
+          type:       'Jpeg'
+        }]
+      }
+
+      amsService.createMultiTaskJob(options, function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+        console.log(res.body)
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property("InputMediaAssets")
+        expect(data.d).to.have.property('Tasks')
+
+        done()
+
+      })
+    })
+
   })
 })

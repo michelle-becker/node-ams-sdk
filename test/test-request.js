@@ -7,24 +7,26 @@ var amsRequest
 describe('AMS Request', function () {
 
   it('should exist', function(){
-    
+
     expect(AMSRequest).to.exist
 
   })
 
   describe('Properties and Methods', function () {
 
-    before(function (done) {
+    before(function () {
 
       //Check there is a config
       expect(config).to.exist
-      done()
+      expect(config.service).to.exist
+      expect(config.service.client_id).to.exist
+      expect(config.service.client_secret).to.exist
 
     })
 
     it('should create new request object from config', function () {
 
-      amsRequest = new AMSRequest(config)
+      amsRequest = new AMSRequest(config.service)
       expect(amsRequest).to.exist
 
     })
@@ -34,8 +36,8 @@ describe('AMS Request', function () {
       expect(amsRequest).to.have.property('config')
       expect(amsRequest.config).to.have.property('mediaURI', "https://media.windows.net/API/")
       expect(amsRequest.config).to.have.property('tokenURI', "https://wamsprodglobal001acs.accesscontrol.windows.net/v2/OAuth2-13")
-      expect(amsRequest.config).to.have.property('client_id', config.client_id)
-      expect(amsRequest.config).to.have.property('client_secret', config.client_secret)
+      expect(amsRequest.config).to.have.property('client_id', config.service.client_id)
+      expect(amsRequest.config).to.have.property('client_secret', config.service.client_secret)
 
     })
 
@@ -48,7 +50,7 @@ describe('AMS Request', function () {
     it('should set access token based on config', function (done) {
 
       expect(amsRequest).to.have.property('setAccessToken')
-      
+
       amsRequest.setAccessToken(function (err, res) {
 
         expect(err).to.not.exist
@@ -65,14 +67,15 @@ describe('AMS Request', function () {
       //http://msdn.microsoft.com/en-us/library/azure/jj129576.aspx
       var config2 = {
 
-        client_id     : config.client_id,
-        client_secret : config.client_secret,
+        client_id     : config.service.client_id,
+        client_secret : config.service.client_secret,
         access_token  : "http%3a%2f%2fschemas.xmlsoap.org%2fws%2f2005%2f05%2fidentity%2fclaims%2fnameidentifier=client_id&http%3a%2f%2fschemas.microsoft.com%2faccesscontrolservice%2f2010%2f07%2fclaims%2fidentityprovider=https%3a%2f%2fwamsprodglobal001acs.accesscontrol.windows.net%2f&Audience=urn%3aWindowsAzureMediaServices&ExpiresOn=1326498007&Issuer=https%3a%2f%2f wamsprodglobal001acs.accesscontrol.windows.net%2f&HMACSHA256=hV1WF7sTe%2ffoHqzK%2ftmnwQY22NRPaDytcOOpC9Nv4DA%3d",
         token_expires : new Date()
 
       }
 
       var amsRequest2 = new AMSRequest(config2)
+
       expect(amsRequest2).to.exist
       expect(amsRequest2).to.have.property('config')
       expect(amsRequest2).to.have.property('token', config2.access_token)
