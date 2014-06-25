@@ -1,6 +1,6 @@
 {
   "name": "node-ams-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Client SDK for Azure Media Service",
   "main": "index.js",
   "repository": {
