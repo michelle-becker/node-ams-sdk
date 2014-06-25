@@ -8,6 +8,7 @@ var amsService
 var assetId
 var accessPolicyId
 var locatorId
+var jobId
 
 describe('AMS Service', function () {
 
@@ -594,8 +595,26 @@ describe('AMS Service', function () {
     it('should not list any access policies for the asset with out locator - cb', function (done) {
 
       amsService.listAssetAccessPolicies( assetId, function (err, res) {
-        //console.log(err, res.body)
+
+        expect(err).to.not.exist
+        expect(res).to.exist
+
+        expect(res.statusCode).to.eql(404)
+
+        try {
+          var data = JSON.parse(res.body)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('error')
+        expect(data.error).to.have.property('message')
+        expect(data.error.message.value).to.eql("Resource not found for the segment \'AccessPolicies\'.")
+
         done()
+
       })
     })
 
@@ -991,9 +1010,11 @@ describe('AMS Service', function () {
       var options = {
         name:     'Test_1_Thumb',
         assetId:  config.testAssetId,
-        outputName: 'Test_1_Output_2',
+        outputName: 'Test_1_Output_Thumb',
         encoding: 'Thumbnails',
         value:    '00:00:05',
+        width:     120,
+        height:    120,
         type:     'Jpeg'
       }
 
@@ -1007,10 +1028,14 @@ describe('AMS Service', function () {
         } catch (err) {
           expect(err).to.not.exist
         }
-        console.log(res.body)
+
         expect(data).to.have.property('d')
         expect(data.d).to.have.property("InputMediaAssets")
         expect(data.d).to.have.property('Tasks')
+        expect(data.d).to.have.property('Id')
+
+        // set the jobId
+        jobId = data.d.Id
 
         done()
 
@@ -1046,6 +1071,7 @@ describe('AMS Service', function () {
         expect(data).to.have.property('d')
         expect(data.d).to.have.property("InputMediaAssets")
         expect(data.d).to.have.property('Tasks')
+        expect(data.d).to.have.property('Id')
 
         done()
 
@@ -1063,9 +1089,11 @@ describe('AMS Service', function () {
         },
         {
           encoding:   "Thumbnails",
-          outputName: 'Test_3_Output_2',
+          outputName: 'Test_3_Output_Thumb',
           value:      '00:00:05',
-          type:       'Jpeg'
+          type:       'Jpeg',
+          width:     120,
+          height:    120,
         }]
       }
 
@@ -1073,7 +1101,7 @@ describe('AMS Service', function () {
 
         expect(err).to.not.exist
         expect(res.body).to.exist
-        console.log(res.body)
+
         try {
           var data = JSON.parse(res.body)
         } catch (err) {
@@ -1083,6 +1111,73 @@ describe('AMS Service', function () {
         expect(data).to.have.property('d')
         expect(data.d).to.have.property("InputMediaAssets")
         expect(data.d).to.have.property('Tasks')
+        expect(data.d).to.have.property('Id')
+
+        done()
+
+      })
+    })
+
+    it('should get the job', function (done) {
+
+      amsService.getJob(jobId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property("State")
+        expect(data.d).to.have.property('Tasks')
+        expect(data.d).to.have.property('Id')
+
+        done()
+
+      })
+
+    })
+
+    it('should get the job status', function (done){
+
+      amsService.getJobStatus(jobId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property("State")
+
+        done()
+
+      })
+    })
+
+    it('should get the job tasks', function (done){
+
+      amsService.getJobTasks(jobId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
 
         done()
 
