@@ -1,7 +1,7 @@
 node-ams-sdk
 ============
 
-* Provides lightweight wrapper around Azure Media Services REST API
+Provides lightweight wrapper around Azure Media Services REST API
 
 
 ## Usage
@@ -85,7 +85,7 @@ Requires an assetId, a data object, and a callback. This operation will preform 
 
 
 * **Name**
-* **AlternateId** - String
+* **AlternateId** - _String_
 * **ContentKeys**
 * **ParentAssets**
 
@@ -151,10 +151,10 @@ Requires data and callback. Will create a new locator. Allowed data properties a
 
 * **AccessPolicyId**
 * **AssetId**
-* **StartTime** (Format: 'MM/DD/YYYY hh:mm:ss A')
+* **StartTime** - (Format: 'MM/DD/YYYY hh:mm:ss A')
 * **Type**
 * **Name**
-* **ExpirationDateTime** (Format: 'MM/DD/YYYY hh:mm:ss A')
+* **ExpirationDateTime** - (Format: 'MM/DD/YYYY hh:mm:ss A')
 
 
 ####updateLocator(locatorId, data, cb)
@@ -162,12 +162,12 @@ Requires data and callback. Will create a new locator. Allowed data properties a
 Requires locatorId, data, and callback. Will upate an exisiting locator. Allowed data properties are:
 
 
-* **StartTime** (Format: 'MM/DD/YYYY hh:mm:ss A')
+* **StartTime** - (Format: 'MM/DD/YYYY hh:mm:ss A')
 * **Name**
-* **ExpirationDateTime** (Format: 'MM/DD/YYYY hh:mm:ss A')
+* **ExpirationDateTime** - (Format: 'MM/DD/YYYY hh:mm:ss A')
 
 
-**removeLocator(locatorId, cb)**
+####removeLocator(locatorId, cb)
 
 Requires a locatorId and a callback. Will remove selected locator
 
@@ -180,21 +180,20 @@ Requires an options object and a callback. Will create an encoding job for given
 
 * **name**       - The name of the job
 * **assetId**    - The id of the asset to be encoded
-* **encoding**   - String representation of encoding e.g. "H264 Broadband 720p"
-* **outputName** - The name of the output asset
+* **encoding**    - String representation of encoding e.g. "H264 Broadband 720p"
+* **outputName**  - The name of the output asset
 
 _if encoding is 'Thumbnails', these extra parameters are required_
 
+* **value**   - The timecode of the time the thumbnail is to be taken
+* **type**    - The type of image for the output. Allowed: "MemoryBMP"; "Bmp"; "Emf"; "Wmf"; "Gif"; "Jpeg"; "Png"; "Tiff"; "Exif"; "Icon"
+* **width**   - int32 value of the output width
+* **height**  - int32 value of the height
 
-    * **value**   - The timecode of the time the thumbnail is to be taken
-    * **type**    - The type of image for the output. Allowed: "MemoryBMP"; "Bmp"; "Emf"; "Wmf"; "Gif"; "Jpeg"; "Png"; "Tiff"; "Exif"; "Icon"
-    * **width**   - int32 value of the output width
-    * **height**  - int32 value of the height
+_optional thumbnail arguments_
 
-    _optional thumbnail arguments_
-
-    * **step** - A string value that describes the time increments in a video at which a thumbnail will be generated
-    * **stop** - A string value that describes the end time of the sequence of thumbnails
+* **step** - A string value that describes the time increments in a video at which a thumbnail will be generated
+* **stop** - A string value that describes the end time of the sequence of thumbnails
 
 
 ##### Example
