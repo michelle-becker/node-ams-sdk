@@ -4,7 +4,7 @@ node-ams-sdk
 * Provides lightweight wrapper around Azure Media Services REST API
 
 
-### Usage 
+### Usage
 
 
 ```
@@ -187,8 +187,57 @@ name       - The name of the job
 assetId    - The id of the asset to be encoded
 encoding   - String representation of encoding e.g. "H264 Broadband 720p"
 outputName - The name of the output asset
+
+**if encoding is 'Thumbnails', these extra parameters are required**
+
+value  - The timecode of the time the thumbnail is to be taken
+type   - The type of image for the output. Allowed: "MemoryBMP"; "Bmp"; "Emf"; "Wmf"; "Gif"; "Jpeg"; "Png"; "Tiff"; "Exif"; "Icon"
+width  - int32 value of the output width
+height - int32 value of the height
+
+**optional thumbnail arguments**
+
+step - A string value that describes the time increments in a video at which a thumbnail will be generated
+stop - A string value that describes the end time of the sequence of thumbnails
+
 ```
+
+
+**createMultiTaskJob(options, cb)**
+
+Requires an options object and a callback. Will create an encoding job for given asset. Options are as follows:
+
+```
+name       - The name of the job
+assetId    - The id of the asset to be encoded
+tasks      - An array of tasks options - each of with has the following
+
+    encoding   - String representation of encoding e.g. "H264 Broadband 720p"
+    outputName - The name of the output asset
+
+    **if encoding is 'Thumbnails', these extra parameters are required**
+
+    value  - The timecode of the time the thumbnail is to be taken
+    type   - The type of image for the output. Allowed: "MemoryBMP"; "Bmp"; "Emf"; "Wmf"; "Gif"; "Jpeg"; "Png"; "Tiff"; "Exif"; "Icon"
+    width  - int32 value of the output width
+    height - int32 value of the height
+
+    **optional thumbnail arguments**
+
+    step - A string value that describes the time increments in a video at which a thumbnail will be generated
+    stop - A string value that describes the end time of the sequence of thumbnails
+
+```
+
+
+**getJob(jobId, [cb])**
+
+Requires a jobId. Will return all information for a job. Will stream if optional callback is not provided.
 
 **getJobStatus(jobId, [cb])**
 
-Requires a jobId. Will return the status of the job. Will stream is optional callback is not provided
+Requires a jobId. Will return the status of the job. Will stream if optional callback is not provided.
+
+**getJobTasks(jobId, [cb])**
+
+Requires a jobId. Will return the tasks for the job. Will stream if optional callback is not provided.
