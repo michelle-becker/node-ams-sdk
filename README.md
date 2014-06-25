@@ -68,14 +68,12 @@ If a callback is provided, it will return an ```( err, response )``` signature. 
 Data is and optional parameter. Asset can be created without data. It will just create an asset of Name=null. The allowable keys are
 
 * **Name**
-* **AlternateId**
+* **AlternateId** - _String_
 * **ContentKeys**
 * **ParentAssets**
 * **Options**
 * **StorageAccountName**
 
-
-####AlternateId should be a string
 
 A callback is required. No streaming out of a create.
 
