@@ -963,7 +963,7 @@ describe('AMS Service', function () {
         name:       'Test_1',
         assetId:    config.testAssetId,
         encoding:   "H264 Broadband 720p",
-        outputName: 'Test_Output_1'
+        outputName: 'Test_1_Output_1'
       }
 
       amsService.createEncodingJob(options, function (err, res) {
@@ -991,6 +991,7 @@ describe('AMS Service', function () {
       var options = {
         name:     'Test_1_Thumb',
         assetId:  config.testAssetId,
+        outputName: 'Test_1_Output_2',
         encoding: 'Thumbnails',
         value:    '00:00:05',
         type:     'Jpeg'
