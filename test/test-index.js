@@ -980,13 +980,12 @@ describe('AMS Service', function () {
     it('should create a video encoding job', function (done){
 
       var options = {
-        name:       'Test_1',
-        assetId:    config.testAssetId,
-        encoding:   "H264 Broadband 720p",
-        outputName: 'Test_1_Output_1'
+        Name:       'Test_1',
+        Configuration:   "H264 Broadband 720p",
+        OutputAssetName: 'Test_1_Output_1'
       }
 
-      amsService.createEncodingJob(options, function (err, res) {
+      amsService.createEncodingJob(config.testAssetId, options, function (err, res) {
 
         expect(err).to.not.exist
         expect(res.body).to.exist
@@ -1009,17 +1008,16 @@ describe('AMS Service', function () {
     it('should create a thumbnails job', function (done){
 
       var options = {
-        name:     'Test_1_Thumb',
-        assetId:  config.testAssetId,
-        outputName: 'Test_1_Output_Thumb',
-        encoding: 'Thumbnails',
-        value:    '00:00:05',
-        width:     120,
-        height:    120,
-        type:     'Jpeg'
+        Name:     'Test_1_Thumb',
+        OutputAssetName: 'Test_1_Output_Thumb',
+        Configuration: 'Thumbnails',
+        Value:    '00:00:05',
+        Width:     120,
+        Height:    120,
+        Type:     'Jpeg'
       }
 
-      amsService.createEncodingJob(options, function (err, res) {
+      amsService.createEncodingJob(config.testAssetId, options, function (err, res) {
 
         expect(err).to.not.exist
         expect(res.body).to.exist
@@ -1046,19 +1044,18 @@ describe('AMS Service', function () {
     it('should create multi task video encoding job', function (done){
 
       var options = {
-        name: 'Test_2',
-        assetId: config.testAssetId,
-        tasks: [{
-          encoding:   "H264 Broadband 720p",
-          outputName: 'Test_2_Output_1',
+        Name: 'Test_2',
+        Tasks: [{
+          Configuration:   "H264 Broadband 720p",
+          OutputAssetName: 'Test_2_Output_1',
         },
         {
-          encoding:   "H264 Broadband 1080p",
-          outputName: 'Test_2_Output_2',
+          Configuration:   "H264 Broadband 1080p",
+          OutputAssetName: 'Test_2_Output_2',
         }]
       }
 
-      amsService.createMultiTaskJob(options, function (err, res) {
+      amsService.createMultiTaskJob(config.testAssetId, options, function (err, res) {
 
         expect(err).to.not.exist
         expect(res.body).to.exist
@@ -1082,23 +1079,22 @@ describe('AMS Service', function () {
     it('should create multi task video encoding and thumbnail job', function (done){
 
       var options = {
-        name: 'Test_3',
-        assetId: config.testAssetId,
-        tasks: [{
-          encoding:   "H264 Broadband 720p",
-          outputName: 'Test_3_Output_1',
+        Name: 'Test_3',
+        Tasks: [{
+          Configuration:   "H264 Broadband 720p",
+          OutputAssetName: 'Test_3_Output_1',
         },
         {
-          encoding:   "Thumbnails",
-          outputName: 'Test_3_Output_Thumb',
-          value:      '00:00:05',
-          type:       'Jpeg',
-          width:     120,
-          height:    120,
+          Configuration:   "Thumbnails",
+          OutputAssetName: 'Test_3_Output_Thumb',
+          Value:      '00:00:05',
+          Type:       'Jpeg',
+          Width:     120,
+          Height:    120,
         }]
       }
 
-      amsService.createMultiTaskJob(options, function (err, res) {
+      amsService.createMultiTaskJob(config.testAssetId, options, function (err, res) {
 
         expect(err).to.not.exist
         expect(res.body).to.exist
