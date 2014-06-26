@@ -172,76 +172,81 @@ Requires a locatorId and a callback. Will remove selected locator
 ### Encoding Job
 -----------------
 
-####createEncodingJob(options, cb)
+####createEncodingJob(assetId, options, cb)
 
-Requires an options object and a callback. Will create an encoding job for given asset. Options are as follows:
+Requires an assetId of the asset to be encoded, an options object, and a callback. Will create an encoding job for given asset. Options are as follows:
 
-* **name**       - The name of the job
-* **assetId**    - The id of the asset to be encoded
-* **encoding**    - String representation of encoding e.g. "H264 Broadband 720p"
-* **outputName**  - The name of the output asset
+* **Name**             - The name of the job
+* **Configuration**    - String representation of encoding e.g. "H264 Broadband 720p"
+* **OutputAssetName**  - The name of the output asset
+* **JobNotificationSubscriptions** - Object with the job notification info. Should include:
 
-_if encoding is 'Thumbnails', these extra parameters are required_
+    * **TargetJobState**         - Integer value representing the state for which notifications will happen
+    * **NotificationEndpointId** - id of the endpoint the notifications are to be received from
 
-* **value**   - The timecode of the time the thumbnail is to be taken
-* **type**    - The type of image for the output. Allowed: "MemoryBMP"; "Bmp"; "Emf"; "Wmf"; "Gif"; "Jpeg"; "Png"; "Tiff"; "Exif"; "Icon"
-* **width**   - int32 value of the output width
-* **height**  - int32 value of the height
+_if Configuration is 'Thumbnails', these extra parameters are required_
+
+* **Value**   - The timecode of the time the thumbnail is to be taken
+* **Type**    - The type of image for the output. Allowed: "MemoryBMP"; "Bmp"; "Emf"; "Wmf"; "Gif"; "Jpeg"; "Png"; "Tiff"; "Exif"; "Icon"
+* **Width**   - int32 value of the output width
+* **Height**  - int32 value of the height
 
 _optional thumbnail arguments_
 
-* **step** - A string value that describes the time increments in a video at which a thumbnail will be generated
-* **stop** - A string value that describes the end time of the sequence of thumbnails
+* **Step** - A string value that describes the time increments in a video at which a thumbnail will be generated
+* **Stop** - A string value that describes the end time of the sequence of thumbnails
 
 
 ##### Example
 
 ```
 var options = {
-  name:       'Test_1',
-  assetId:    config.testAssetId,
-  encoding:   "H264 Broadband 720p",
-  outputName: 'Test_1_Output_1'
+  Name:            'Test_1',
+  Configuration:   'H264 Broadband 720p',
+  OutputAssetName: 'Test_1_Output_1'
 }
 
 or
 
 var options = {
-  name:     'Test_1_Thumb',
-  assetId:  config.testAssetId,
-  outputName: 'Test_1_Output_Thumb',
-  encoding: 'Thumbnails',
-  value:    '00:00:05',
-  width:     120,
-  height:    120,
-  type:     'Jpeg'
+  Name:            'Test_1_Thumb',
+  OutputAssetName: 'Test_1_Output_Thumb',
+  Configuration:   'Thumbnails',
+  Value:           '00:00:05',
+  Width:           120,
+  Height:          120,
+  Type:            'Jpeg'
 }
 ```
 
 
-####createMultiTaskJob(options, cb)
+####createMultiTaskJob(assetId, options, cb)
 
-Requires an options object and a callback. Will create an encoding job for given asset. Options are as follows:
+Requires an assetId of the asset to be encoded, an options object, and a callback. Will create an encoding job with multiple tasks for given asset. Options are as follows:
 
 
-* **name**       - The name of the job
-* **assetId**    - The id of the asset to be encoded
-* **tasks**      - An array of tasks options - each of with has the following
+* **Name**       - The name of the job
+* **JobNotificationSubscriptions** - Object with the job notification info. Should include:
 
-    * **encoding**    - String representation of encoding e.g. "H264 Broadband 720p"
-    * **outputName**  - The name of the output asset
+    * **TargetJobState**         - Integer value representing the state for which notifications will happen
+    * **NotificationEndpointId** - id of the endpoint the notifications are to be received from
 
-    _if encoding is 'Thumbnails', these extra parameters are required_
+* **Tasks**      - An array of tasks options - each of with has the following properties:
 
-    * **value**   - The timecode of the time the thumbnail is to be taken
-    * **type**    - The type of image for the output. Allowed: "MemoryBMP"; "Bmp"; "Emf"; "Wmf"; "Gif"; "Jpeg"; "Png"; "Tiff"; "Exif"; "Icon"
-    * **width**   - int32 value of the output width
-    * **height**  - int32 value of the height
+    * **Configuration**    - String representation of encoding e.g. "H264 Broadband 720p"
+    * **OutputAssetName**  - The name of the output asset
+
+    _if Configuration is 'Thumbnails', these extra parameters are required_
+
+    * **Value**   - The timecode of the time the thumbnail is to be taken
+    * **Type**    - The type of image for the output. Allowed: "MemoryBMP"; "Bmp"; "Emf"; "Wmf"; "Gif"; "Jpeg"; "Png"; "Tiff"; "Exif"; "Icon"
+    * **Width**   - int32 value of the output width
+    * **Height**  - int32 value of the height
 
     _optional thumbnail arguments_
 
-    * **step** - A string value that describes the time increments in a video at which a thumbnail will be generated
-    * **stop** - A string value that describes the end time of the sequence of thumbnails
+    * **Step** - A string value that describes the time increments in a video at which a thumbnail will be generated
+    * **Stop** - A string value that describes the end time of the sequence of thumbnails
 
 
 ##### Example
@@ -249,19 +254,18 @@ Requires an options object and a callback. Will create an encoding job for given
 ```
 var options = {
 
-  name: 'Test_3',
-  assetId: config.testAssetId,
-  tasks: [{
-    encoding:   "H264 Broadband 720p",
-    outputName: 'Test_3_Output_1',
+  Name: 'Test_3',
+  Tasks: [{
+    Configuration:   "H264 Broadband 720p",
+    OutputAssetName: 'Test_3_Output_1',
   },
   {
-    encoding:   "Thumbnails",
-    outputName: 'Test_3_Output_Thumb',
-    value:      '00:00:05',
-    type:       'Jpeg',
-    width:     120,
-    height:    120,
+    Configuration:   "Thumbnails",
+    OutputAssetName: 'Test_3_Output_Thumb',
+    Value:      '00:00:05',
+    Type:       'Jpeg',
+    Width:     120,
+    Height:    120,
   }]
 }
 ```
