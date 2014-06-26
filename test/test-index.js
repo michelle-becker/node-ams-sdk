@@ -9,6 +9,7 @@ var assetId
 var accessPolicyId
 var locatorId
 var jobId
+var taskId
 
 describe('AMS Service', function () {
 
@@ -1179,10 +1180,31 @@ describe('AMS Service', function () {
         expect(data).to.have.property('d')
         expect(data.d).to.have.property('results')
 
+        taskId = data.d.results[0].Id
         done()
 
       })
     })
 
+    it('should get the task output assets', function (done){
+
+      amsService.getTaskOutput(taskId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results[0]).to.have.property('Uri')
+        done()
+
+      })
+    })
   })
 })
