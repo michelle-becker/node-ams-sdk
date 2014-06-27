@@ -10,6 +10,7 @@ var accessPolicyId
 var locatorId
 var jobId
 var taskId
+var endpointId
 
 describe('AMS Service', function () {
 
@@ -20,6 +21,7 @@ describe('AMS Service', function () {
     expect(config.service.client_id).to.exist
     expect(config.service.client_secret).to.exist
     expect(config.testAssetId).to.exist
+    expect(config.testQueueName).to.exist
 
   })
 
@@ -956,6 +958,221 @@ describe('AMS Service', function () {
     })
   })
 
+  describe('Notification Endpoints', function () {
+
+    this.timeout(5000)
+
+    it('should list notification endpoints - cb', function (done) {
+
+      amsService.listNotificationEndpoints(function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+        expect(res.statusCode).to.eql(200)
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+
+        done()
+      })
+    })
+
+    it('should list notification endpoints - stream', function (done) {
+
+      var data = ''
+
+      amsService.listNotificationEndpoints()
+      .on('data', function(d){
+        data += d
+      })
+      .on('error', function(e){
+        expect(e).to.not.exist
+      })
+      .on('end', function(){
+
+        try {
+          data = JSON.parse(data)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results).to.exist
+
+        done()
+
+      })
+    })
+
+    it('should create notification endpoint', function (done) {
+
+      var notificationEndpoint = {
+        Name:            'TestEndpoint',
+        EndPointAddress: config.testQueueName
+      }
+
+      amsService.createNotificationEndpoint(notificationEndpoint, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+        expect(res.statusCode).to.eql(201)
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('Id')
+
+        endpointId = data.d.Id
+
+        done()
+
+      })
+    })
+
+    it('should get new notification endpoint - cb', function (done) {
+
+      amsService.getNotificationEndpoint(endpointId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+        expect(res.statusCode).to.eql(200)
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('Id')
+
+        endpointId = data.d.Id
+
+        done()
+
+      })
+
+    })
+
+    it('should get new notification endpoint - stream', function (done) {
+
+      var data = ''
+
+      amsService.getNotificationEndpoint(endpointId)
+      .on('data', function(d){
+        data += d
+      })
+      .on('error', function(e){
+        expect(e).to.not.exist
+      })
+      .on('end', function(){
+
+        try {
+          data = JSON.parse(data)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('Id')
+        expect(data.d.Name).to.eql('TestEndpoint')
+
+        done()
+
+      })
+    })
+
+    it('should update notification endpoint', function (done) {
+
+      var notificationEndpoint = {
+        Name: 'TestEndpoint2'
+      }
+
+      amsService.updateNotificationEndpoint(endpointId, notificationEndpoint, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+        expect(res.statusCode).to.eql(204)
+
+        done()
+
+      })
+    })
+
+    it('should get updated notification endpoint - stream', function (done) {
+
+      var data = ''
+
+      amsService.getNotificationEndpoint(endpointId)
+      .on('data', function(d){
+        data += d
+      })
+      .on('error', function(e){
+        expect(e).to.not.exist
+      })
+      .on('end', function(){
+
+        try {
+          data = JSON.parse(data)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('Id')
+        expect(data.d.Name).to.eql('TestEndpoint2')
+
+        done()
+
+      })
+    })
+
+    it('should remove notification endpoint', function (done) {
+
+      amsService.removeNotificationEndpoint(endpointId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+        expect(res.statusCode).to.eql(204)
+
+        done()
+
+      })
+    })
+
+    it('should not get deleted notification endpoint', function (done) {
+
+      var data = ''
+
+      amsService.getNotificationEndpoint(endpointId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.statusCode).to.eql(404)
+        done()
+
+      })
+
+    })
+
+  })
+
   describe('Encoding Job', function (){
 
     this.timeout(5000)
@@ -970,7 +1187,31 @@ describe('AMS Service', function () {
         expect(res.statusCode).to.eql(204)
         expect(res.body).to.eql('')
 
-        done()
+        var notificationEndpoint = {
+          Name:            'TestJobEndpoint',
+          EndPointAddress: config.testQueueName
+        }
+
+        amsService.createNotificationEndpoint(notificationEndpoint, function (err, res){
+
+          expect(err).to.not.exist
+          expect(res.body).to.exist
+          expect(res.statusCode).to.eql(201)
+
+          try {
+            var data = JSON.parse(res.body)
+          } catch (err) {
+            expect(err).to.not.exist
+          }
+
+          expect(data).to.have.property('d')
+          expect(data.d).to.have.property('Id')
+
+          endpointId = data.d.Id
+
+          done()
+
+        })
 
       })
 
@@ -980,7 +1221,7 @@ describe('AMS Service', function () {
     it('should create a video encoding job', function (done){
 
       var options = {
-        Name:       'Test_1',
+        Name:            'Test_1',
         Configuration:   "H264 Broadband 720p",
         OutputAssetName: 'Test_1_Output_1'
       }
@@ -989,6 +1230,7 @@ describe('AMS Service', function () {
 
         expect(err).to.not.exist
         expect(res.body).to.exist
+        expect(res.statusCode).to.eql(201)
 
         try {
           var data = JSON.parse(res.body)
@@ -1005,7 +1247,41 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should create a thumbnails job', function (done){
+    it('should create a video encoding job with notification subscription', function (done){
+
+      var options = {
+        Name:            'Test_1',
+        Configuration:   "H264 Broadband 720p",
+        OutputAssetName: 'Test_1_Output_1',
+        JobNotificationSubscriptions: [{
+          TargetJobState: 1,
+          NotificationEndPointId: endpointId
+        }]
+      }
+
+      amsService.createEncodingJob(config.testAssetId, options, function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+        console.log(res.body)
+        expect(res.statusCode).to.eql(201)
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property("InputMediaAssets")
+        expect(data.d).to.have.property('Tasks')
+
+        done()
+
+      })
+    })
+
+    it.skip('should create a thumbnails job', function (done){
 
       var options = {
         Name:     'Test_1_Thumb',
@@ -1021,6 +1297,7 @@ describe('AMS Service', function () {
 
         expect(err).to.not.exist
         expect(res.body).to.exist
+        expect(res.statusCode).to.eql(201)
 
         try {
           var data = JSON.parse(res.body)
@@ -1041,7 +1318,49 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should create multi task video encoding job', function (done){
+    it.skip('should create a thumbnails job with notification subscription', function (done){
+
+      var options = {
+        Name:            'Test_1_Thumb_2',
+        OutputAssetName: 'Test_1_Output_Thumb_2',
+        Configuration:   'Thumbnails',
+        JobNotificationSubscriptions: {
+          TargetJobState: 1,
+          NotificationEndPointId: endpointId
+        },
+        Value:    '00:00:05',
+        Width:     200,
+        Height:    200,
+        Type:     'Jpeg'
+      }
+
+      amsService.createEncodingJob(config.testAssetId, options, function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+        console.log(res.body)
+        expect(res.statusCode).to.eql(201)
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property("InputMediaAssets")
+        expect(data.d).to.have.property('Tasks')
+        expect(data.d).to.have.property('Id')
+
+        // set the jobId
+        jobId = data.d.Id
+
+        done()
+
+      })
+    })
+
+    it.skip('should create multi task video encoding job', function (done){
 
       var options = {
         Name: 'Test_2',
@@ -1059,6 +1378,7 @@ describe('AMS Service', function () {
 
         expect(err).to.not.exist
         expect(res.body).to.exist
+        expect(res.statusCode).to.eql(201)
 
         try {
           var data = JSON.parse(res.body)
@@ -1076,7 +1396,7 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should create multi task video encoding and thumbnail job', function (done){
+    it.skip('should create multi task video encoding and thumbnail job', function (done){
 
       var options = {
         Name: 'Test_3',
@@ -1098,6 +1418,7 @@ describe('AMS Service', function () {
 
         expect(err).to.not.exist
         expect(res.body).to.exist
+        expect(res.statusCode).to.eql(201)
 
         try {
           var data = JSON.parse(res.body)
@@ -1115,7 +1436,7 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should get the job', function (done) {
+    it.skip('should get the job', function (done) {
 
       amsService.getJob(jobId, function (err, res){
 
@@ -1139,7 +1460,7 @@ describe('AMS Service', function () {
 
     })
 
-    it('should get the job status', function (done){
+    it.skip('should get the job status', function (done){
 
       amsService.getJobStatus(jobId, function (err, res){
 
@@ -1160,12 +1481,13 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should get the job tasks', function (done){
+    it.skip('should get the job tasks', function (done){
 
       amsService.getJobTasks(jobId, function (err, res){
 
         expect(err).to.not.exist
         expect(res.body).to.exist
+        //console.log(res.body)
 
         try {
           var data = JSON.parse(res.body)
@@ -1182,13 +1504,13 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should get the task output assets', function (done){
+    it.skip('should get the task output assets', function (done){
 
-      amsService.getTaskOutput(taskId, function (err, res){
+      amsService.getTaskOutput(jobId, function (err, res){
 
         expect(err).to.not.exist
         expect(res.body).to.exist
-
+        //console.log(res.body)
         try {
           var data = JSON.parse(res.body)
         } catch (err) {
