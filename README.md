@@ -179,10 +179,6 @@ Requires an assetId of the asset to be encoded, an options object, and a callbac
 * **Name**             - The name of the job
 * **Configuration**    - String representation of encoding e.g. "H264 Broadband 720p"
 * **OutputAssetName**  - The name of the output asset
-* **JobNotificationSubscriptions** - Object with the job notification info. Should include:
-
-    * **TargetJobState**         - Integer value representing the state for which notifications will happen
-    * **NotificationEndpointId** - id of the endpoint the notifications are to be received from
 
 _if Configuration is 'Thumbnails', these extra parameters are required_
 
@@ -226,11 +222,6 @@ Requires an assetId of the asset to be encoded, an options object, and a callbac
 
 
 * **Name**       - The name of the job
-* **JobNotificationSubscriptions** - Object with the job notification info. Should include:
-
-    * **TargetJobState**         - Integer value representing the state for which notifications will happen
-    * **NotificationEndpointId** - id of the endpoint the notifications are to be received from
-
 * **Tasks**      - An array of tasks options - each of with has the following properties:
 
     * **Configuration**    - String representation of encoding e.g. "H264 Broadband 720p"
@@ -281,3 +272,7 @@ Requires a jobId. Will return the status of the job. Will stream if optional cal
 ####getJobTasks(jobId, [cb])
 
 Requires a jobId. Will return the tasks for the job. Will stream if optional callback is not provided.
+
+####getTaskOutput(taskId, [cb])
+
+Requires a taskId. Will return the task information. Will stream if optional callback is not provided.

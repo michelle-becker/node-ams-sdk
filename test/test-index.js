@@ -685,7 +685,7 @@ describe('AMS Service', function () {
           amsService.removeAsset(assetId, function (err, res){
 
             expect(err).to.not.exist
-            console.log(res.body)
+
             expect(res.statusCode).to.eql(204)
 
             done()
@@ -1159,8 +1159,6 @@ describe('AMS Service', function () {
 
     it('should not get deleted notification endpoint', function (done) {
 
-      var data = ''
-
       amsService.getNotificationEndpoint(endpointId, function (err, res){
 
         expect(err).to.not.exist
@@ -1188,7 +1186,7 @@ describe('AMS Service', function () {
         expect(res.body).to.eql('')
 
         var notificationEndpoint = {
-          Name:            'TestJobEndpoint',
+          Name:            'TestJobEndpoint2',
           EndPointAddress: config.testQueueName
         }
 
@@ -1212,6 +1210,18 @@ describe('AMS Service', function () {
           done()
 
         })
+
+      })
+
+    })
+
+    after( function (done) {
+
+      amsService.removeNotificationEndpoint(endpointId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res.statusCode).to.eql(204)
+        done()
 
       })
 
@@ -1247,7 +1257,7 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should create a video encoding job with notification subscription', function (done){
+    it.skip('should create a video encoding job with notification subscription', function (done){
 
       var options = {
         Name:            'Test_1',
@@ -1263,7 +1273,7 @@ describe('AMS Service', function () {
 
         expect(err).to.not.exist
         expect(res.body).to.exist
-        console.log(res.body)
+
         expect(res.statusCode).to.eql(201)
 
         try {
@@ -1281,7 +1291,7 @@ describe('AMS Service', function () {
       })
     })
 
-    it.skip('should create a thumbnails job', function (done){
+    it('should create a thumbnails job', function (done){
 
       var options = {
         Name:     'Test_1_Thumb',
@@ -1338,7 +1348,7 @@ describe('AMS Service', function () {
 
         expect(err).to.not.exist
         expect(res.body).to.exist
-        console.log(res.body)
+
         expect(res.statusCode).to.eql(201)
 
         try {
@@ -1360,7 +1370,7 @@ describe('AMS Service', function () {
       })
     })
 
-    it.skip('should create multi task video encoding job', function (done){
+    it('should create multi task video encoding job', function (done){
 
       var options = {
         Name: 'Test_2',
@@ -1396,7 +1406,7 @@ describe('AMS Service', function () {
       })
     })
 
-    it.skip('should create multi task video encoding and thumbnail job', function (done){
+    it('should create multi task video encoding and thumbnail job', function (done){
 
       var options = {
         Name: 'Test_3',
@@ -1436,12 +1446,13 @@ describe('AMS Service', function () {
       })
     })
 
-    it.skip('should get the job', function (done) {
+    it('should get the job', function (done) {
 
       amsService.getJob(jobId, function (err, res){
 
         expect(err).to.not.exist
         expect(res.body).to.exist
+        expect(res.statusCode).to.eql(200)
 
         try {
           var data = JSON.parse(res.body)
@@ -1460,12 +1471,13 @@ describe('AMS Service', function () {
 
     })
 
-    it.skip('should get the job status', function (done){
+    it('should get the job status', function (done){
 
       amsService.getJobStatus(jobId, function (err, res){
 
         expect(err).to.not.exist
         expect(res.body).to.exist
+        expect(res.statusCode).to.eql(200)
 
         try {
           var data = JSON.parse(res.body)
@@ -1481,13 +1493,13 @@ describe('AMS Service', function () {
       })
     })
 
-    it.skip('should get the job tasks', function (done){
+    it('should get the job tasks', function (done){
 
       amsService.getJobTasks(jobId, function (err, res){
 
         expect(err).to.not.exist
         expect(res.body).to.exist
-        //console.log(res.body)
+        expect(res.statusCode).to.eql(200)
 
         try {
           var data = JSON.parse(res.body)
@@ -1504,13 +1516,14 @@ describe('AMS Service', function () {
       })
     })
 
-    it.skip('should get the task output assets', function (done){
+    it('should get the task output assets', function (done){
 
-      amsService.getTaskOutput(jobId, function (err, res){
+      amsService.getTaskOutput(taskId, function (err, res){
 
         expect(err).to.not.exist
         expect(res.body).to.exist
-        //console.log(res.body)
+        expect(res.statusCode).to.eql(200)
+
         try {
           var data = JSON.parse(res.body)
         } catch (err) {
