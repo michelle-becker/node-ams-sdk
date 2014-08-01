@@ -6,6 +6,7 @@ var config     = require('../test-config')
 
 var amsService
 var assetId
+var fileId
 var accessPolicyId
 var locatorId
 var jobId
@@ -315,7 +316,191 @@ describe('AMS Service', function () {
       })
     })
 
+    it('should list asset files - cb', function (done) {
+
+      amsService.listAssetFiles(config.testAssetId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res).to.exist
+        expect(res.statusCode).to.eql(200)
+        expect(res.body).to.exist
+
+        try {
+          var data = JSON.parse(res.body)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.not.have.property('error')
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results).to.not.be.empty
+
+        fileId = data.d.results[0].Id
+        done()
+
+      })
+    })
+
+    it('should list asset files - stream', function (done) {
+
+      var data = ''
+
+      amsService.listAssetFiles(config.testAssetId)
+      .on('data', function(d){
+        data += d
+      })
+      .on('error', function (e) {
+        expect(err).to.not.exist
+        done()
+      })
+      .on('end', function () {
+
+        expect(data).to.exist
+
+        try {
+          data = JSON.parse(data)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.not.have.property('error')
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results).to.not.be.empty
+
+        done()
+
+      })
+    })
+
+    it('should list files - cb', function (done) {
+
+      amsService.listFiles(function (err, res){
+
+        expect(err).to.not.exist
+        expect(res).to.exist
+        expect(res.statusCode).to.eql(200)
+        expect(res.body).to.exist
+
+        try {
+          var data = JSON.parse(res.body)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.not.have.property('error')
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results).to.not.be.empty
+
+        done()
+
+      })
+    })
+
+    it('should list files - stream', function (done) {
+
+      var data = ''
+
+      amsService.listFiles()
+      .on('data', function(d){
+        data += d
+      })
+      .on('error', function (e) {
+        expect(err).to.not.exist
+        done()
+      })
+      .on('end', function () {
+
+        expect(data).to.exist
+
+        try {
+          data = JSON.parse(data)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.not.have.property('error')
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('results')
+        expect(data.d.results).to.not.be.empty
+
+        done()
+
+      })
+    })
+
+    it('should get file - cb', function (done) {
+
+      amsService.getFile(fileId, function (err, res){
+
+        expect(err).to.not.exist
+        expect(res).to.exist
+        expect(res.statusCode).to.eql(200)
+        expect(res.body).to.exist
+
+        try {
+          var data = JSON.parse(res.body)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.not.have.property('error')
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('Id')
+
+        done()
+
+      })
+    })
+
+    it('should getFile - stream', function (done) {
+
+      var data = ''
+
+      amsService.getFile(fileId)
+      .on('data', function(d){
+        data += d
+      })
+      .on('error', function (e) {
+        expect(err).to.not.exist
+        done()
+      })
+      .on('end', function () {
+
+        expect(data).to.exist
+
+        try {
+          data = JSON.parse(data)
+
+        } catch (e){
+          expect(e).to.not.exist
+
+        }
+
+        expect(data).to.not.have.property('error')
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property('Id')
+        done()
+
+      })
+    })
+
+
+
     it('should remove an asset', function (done) {
+
       amsService.removeAsset(assetId, function (err, res){
 
         expect(err).to.not.exist
@@ -1294,13 +1479,14 @@ describe('AMS Service', function () {
     it('should create a thumbnails job', function (done){
 
       var options = {
-        Name:     'Test_1_Thumb',
+        Name:            'Test_1_Thumb',
         OutputAssetName: 'Test_1_Output_Thumb',
-        Configuration: 'Thumbnails',
-        Value:    '00:00:05',
-        Width:     120,
-        Height:    120,
-        Type:     'Jpeg'
+        OutputFileName:  'ThumbnailFile',
+        Configuration:   'Thumbnails',
+        Value:           '00:00:05',
+        Width:           120,
+        Height:          120,
+        Type:            'Jpeg'
       }
 
       amsService.createEncodingJob(config.testAssetId, options, function (err, res) {
