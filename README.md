@@ -98,6 +98,22 @@ Requires an assetId and a callback. No streaming.
 
 Requires an assetId. Callback is optional. Will stream without callback. Will link up the data that is in blob storage to the supplied asset. If it works, this will return a status code of 204 with no data.
 
+####listAssetFiles(assetId, [cb])
+
+Will list the files in an asset storage container. Requires an assetId. Callback is optional. Will stream without callback.
+
+####listAssetFiles(assetId, [cb])
+
+Will list the files in an asset storage container. Requires an assetId. Callback is optional. Will stream without callback.
+
+####getFile(fileId, [cb])
+
+Will get the file information for the given id. Requires fileId. Callback is optional. Will stream without callback.
+
+####listFiles([cb])
+
+Will list all of the files in the container. Pretty nifty. Again, Callback optional, be prepared to handle streams.
+
 
 ### Access Policies
 ---------------------
@@ -191,7 +207,7 @@ _optional thumbnail arguments_
 
 * **Step** - A string value that describes the time increments in a video at which a thumbnail will be generated
 * **Stop** - A string value that describes the end time of the sequence of thumbnails
-
+* **OutputFileName** - A string value that can be used for the output blob name - default is the template
 
 ##### Example
 
@@ -207,6 +223,7 @@ or
 var options = {
   Name:            'Test_1_Thumb',
   OutputAssetName: 'Test_1_Output_Thumb',
+  OutputFIleName:  'Test_Thumb',
   Configuration:   'Thumbnails',
   Value:           '00:00:05',
   Width:           120,
@@ -237,8 +254,8 @@ Requires an assetId of the asset to be encoded, an options object, and a callbac
     _optional thumbnail arguments_
 
     * **Step** - A string value that describes the time increments in a video at which a thumbnail will be generated
-    * **Stop** - A string value that describes the end time of the sequence of thumbnails
-
+    * **Stop** - A string value that describes the end time of the sequence of thumbnail
+    * **OutputFileName** - A string value that can be used for the output blob name - default is the template
 
 ##### Example
 
@@ -247,16 +264,17 @@ var options = {
 
   Name: 'Test_3',
   Tasks: [{
-    Configuration:   "H264 Broadband 720p",
+    Configuration:   'H264 Broadband 720p',
     OutputAssetName: 'Test_3_Output_1',
   },
   {
-    Configuration:   "Thumbnails",
+    Configuration:   'Thumbnails',
     OutputAssetName: 'Test_3_Output_Thumb',
-    Value:      '00:00:05',
-    Type:       'Jpeg',
-    Width:     120,
-    Height:    120,
+    OutputFileName:  'Test_Thumbnail',
+    Value:           '00:00:05',
+    Type:            'Jpeg',
+    Width:           120,
+    Height:          120,
   }]
 }
 ```

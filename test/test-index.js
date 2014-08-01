@@ -1479,13 +1479,14 @@ describe('AMS Service', function () {
     it('should create a thumbnails job', function (done){
 
       var options = {
-        Name:     'Test_1_Thumb',
+        Name:            'Test_1_Thumb',
         OutputAssetName: 'Test_1_Output_Thumb',
-        Configuration: 'Thumbnails',
-        Value:    '00:00:05',
-        Width:     120,
-        Height:    120,
-        Type:     'Jpeg'
+        OutputFileName:  'ThumbnailFile',
+        Configuration:   'Thumbnails',
+        Value:           '00:00:05',
+        Width:           120,
+        Height:          120,
+        Type:            'Jpeg'
       }
 
       amsService.createEncodingJob(config.testAssetId, options, function (err, res) {
