@@ -1074,7 +1074,7 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should get locator for asset - cb', function (done) {
+    it('should list locators for asset - cb', function (done) {
 
       amsService.listAssetLocators(assetId, function (err, res){
 
