@@ -209,6 +209,12 @@ _optional thumbnail arguments_
 * **Stop** - A string value that describes the end time of the sequence of thumbnails
 * **OutputFileName** - A string value that can be used for the output blob name - default is the template
 
+_if Configuration is 'Azure Media Indexer', these extra parameters are required_
+
+* **Title** - A descriptive title of the media to be indexed
+* **Description** - A description of the media to be indexed. This should be as descriptive as possbile and include any difficult words or key words the media may include.
+
+
 ##### Example
 
 ```
@@ -256,6 +262,12 @@ Requires an assetId of the asset to be encoded, an options object, and a callbac
     * **Step** - A string value that describes the time increments in a video at which a thumbnail will be generated
     * **Stop** - A string value that describes the end time of the sequence of thumbnail
     * **OutputFileName** - A string value that can be used for the output blob name - default is the template
+
+    _if Configuration is 'Azure Media Indexer', these extra parameters are required_
+
+    * **Title** - A descriptive title of the media to be indexed
+    * **Description** - A description of the media to be indexed. This should be as descriptive as possbile and include any difficult words or key words the media may include.
+
 
 ##### Example
 
