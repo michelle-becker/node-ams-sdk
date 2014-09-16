@@ -45,6 +45,7 @@ Calling this will set the token as in internal property to be used on subsequent
 
 ## Azure Media Services Resources Provided
 
+
 ### Assets
 -----------
 
@@ -184,6 +185,14 @@ Requires locatorId, data, and callback. Will upate an exisiting locator. Allowed
 ####removeLocator(locatorId, cb)
 
 Requires a locatorId and a callback. Will remove selected locator
+
+
+### Media Processors
+-----------
+
+####listMediaProcessors(cb)
+
+Will list all of the available media processor ids. You can reset the internal value of MediaProcessorId directly, or via a config to one of the ids returned by this call. This will be your default processor id. Will stream if no callback.
 
 ### Encoding Job
 -----------------
