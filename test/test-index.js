@@ -1416,9 +1416,9 @@ describe('AMS Service', function () {
     it('should create a video encoding job', function (done){
 
       var options = {
-        Name:            'Test_1',
+        Name:            'Test_1_Job',
         Configuration:   "H264 Broadband 720p",
-        OutputAssetName: 'Test_1_Output_1'
+        OutputAssetName: 'Test_1_Output_720'
       }
 
       amsService.createEncodingJob(config.testAssetId, options, function (err, res) {
@@ -1445,9 +1445,9 @@ describe('AMS Service', function () {
     it.skip('should create a video encoding job with notification subscription', function (done){
 
       var options = {
-        Name:            'Test_1',
+        Name:            'Test_1_Job',
         Configuration:   "H264 Broadband 720p",
-        OutputAssetName: 'Test_1_Output_1',
+        OutputAssetName: 'Test_1_Output_720',
         JobNotificationSubscriptions: [{
           TargetJobState: 1,
           NotificationEndPointId: endpointId
@@ -1479,7 +1479,7 @@ describe('AMS Service', function () {
     it('should create a thumbnails job', function (done){
 
       var options = {
-        Name:            'Test_1_Thumb',
+        Name:            'Test_1_Job_Thumb',
         OutputAssetName: 'Test_1_Output_Thumb',
         OutputFileName:  'ThumbnailFile',
         Configuration:   'Thumbnails',
@@ -1508,6 +1508,38 @@ describe('AMS Service', function () {
 
         // set the jobId
         jobId = data.d.Id
+
+        done()
+
+      })
+    })
+
+    it('should create an indexer job', function (done) {
+
+      var options = {
+        Name:            'Test_Index_Job',
+        OutputAssetName: 'Test_Video_Index',
+        Configuration:   'Azure Media Indexer',
+        Title:           'name of video or audio',
+        Description:     'should be descriptive of video'
+      }
+
+      amsService.createEncodingJob(config.testAssetId, options, function (err, res) {
+
+        expect(err).to.not.exist
+        expect(res.body).to.exist
+        expect(res.statusCode).to.eql(201)
+
+        try {
+          var data = JSON.parse(res.body)
+        } catch (err) {
+          expect(err).to.not.exist
+        }
+
+        expect(data).to.have.property('d')
+        expect(data.d).to.have.property("InputMediaAssets")
+        expect(data.d).to.have.property('Tasks')
+        expect(data.d).to.have.property('Id')
 
         done()
 
@@ -1559,14 +1591,14 @@ describe('AMS Service', function () {
     it('should create multi task video encoding job', function (done){
 
       var options = {
-        Name: 'Test_2',
+        Name: 'Test_2_Job',
         Tasks: [{
           Configuration:   "H264 Broadband 720p",
-          OutputAssetName: 'Test_2_Output_1',
+          OutputAssetName: 'Test_2_Output_720',
         },
         {
           Configuration:   "H264 Broadband 1080p",
-          OutputAssetName: 'Test_2_Output_2',
+          OutputAssetName: 'Test_2_Output_1080',
         }]
       }
 
@@ -1592,13 +1624,13 @@ describe('AMS Service', function () {
       })
     })
 
-    it('should create multi task video encoding and thumbnail job', function (done){
+    it('should create multi task video encoding and thumbnail job and indexer', function (done){
 
       var options = {
-        Name: 'Test_3',
+        Name: 'Test_3_Job',
         Tasks: [{
           Configuration:   "H264 Broadband 720p",
-          OutputAssetName: 'Test_3_Output_1',
+          OutputAssetName: 'Test_3_Output_720',
         },
         {
           Configuration:   "Thumbnails",
@@ -1607,6 +1639,12 @@ describe('AMS Service', function () {
           Type:       'Jpeg',
           Width:     120,
           Height:    120,
+        },
+        {
+          Configuration: "Azure Media Indexer",
+          OutputAssetName: 'Test_3_Output_Index',
+          Title:           'name of video or audio',
+          Description:     'should be descriptive of video'
         }]
       }
 
