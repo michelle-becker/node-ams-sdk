@@ -45,6 +45,7 @@ Calling this will set the token as in internal property to be used on subsequent
 
 ## Azure Media Services Resources Provided
 
+
 ### Assets
 -----------
 
@@ -185,6 +186,14 @@ Requires locatorId, data, and callback. Will upate an exisiting locator. Allowed
 
 Requires a locatorId and a callback. Will remove selected locator
 
+
+### Media Processors
+-----------
+
+####listMediaProcessors(cb)
+
+Will list all of the available media processor ids. You can reset the internal value of MediaProcessorId directly, or via a config to one of the ids returned by this call. This will be your default processor id. Will stream if no callback.
+
 ### Encoding Job
 -----------------
 
@@ -208,6 +217,12 @@ _optional thumbnail arguments_
 * **Step** - A string value that describes the time increments in a video at which a thumbnail will be generated
 * **Stop** - A string value that describes the end time of the sequence of thumbnails
 * **OutputFileName** - A string value that can be used for the output blob name - default is the template
+
+_if Configuration is 'Azure Media Indexer', these extra parameters are required_
+
+* **Title** - A descriptive title of the media to be indexed
+* **Description** - A description of the media to be indexed. This should be as descriptive as possbile and include any difficult words or key words the media may include.
+
 
 ##### Example
 
@@ -256,6 +271,12 @@ Requires an assetId of the asset to be encoded, an options object, and a callbac
     * **Step** - A string value that describes the time increments in a video at which a thumbnail will be generated
     * **Stop** - A string value that describes the end time of the sequence of thumbnail
     * **OutputFileName** - A string value that can be used for the output blob name - default is the template
+
+    _if Configuration is 'Azure Media Indexer', these extra parameters are required_
+
+    * **Title** - A descriptive title of the media to be indexed
+    * **Description** - A description of the media to be indexed. This should be as descriptive as possbile and include any difficult words or key words the media may include.
+
 
 ##### Example
 
