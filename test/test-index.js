@@ -120,6 +120,7 @@ describe('AMS Service', function () {
         expect(res.body).to.exist
 
         try {
+
           var data = JSON.parse(res.body)
 
         } catch (e){
