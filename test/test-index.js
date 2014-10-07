@@ -13,7 +13,7 @@ var jobId
 var taskId
 var endpointId
 
-describe('AMS Service', function () {
+describe.skip('AMS Service', function () {
 
   before(function () {
 
