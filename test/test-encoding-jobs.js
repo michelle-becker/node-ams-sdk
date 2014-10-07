@@ -3,7 +3,7 @@ var AMSService = require('../')
 var config     = require('../test-config')
 
 var amsService
-
+//var endpointId
 
 describe('AMS Service', function () {
 
@@ -24,7 +24,7 @@ describe('AMS Service', function () {
 
   })
 
-  describe.skip('Encoding Job', function (){
+  describe('Encoding Job', function (){
 
     this.timeout(5000)
 
@@ -41,47 +41,48 @@ describe('AMS Service', function () {
         expect(res.statusCode).to.eql(204)
         expect(res.body).to.eql('')
 
-        var notificationEndpoint = {
-          Name:            'TestJobEndpoint2',
-          EndPointAddress: config.testQueueName
-        }
-
-        amsService.createNotificationEndpoint(notificationEndpoint, function (err, res){
-
-          expect(err).to.not.exist
-          expect(res.body).to.exist
-          expect(res.statusCode).to.eql(201)
-
-          try {
-            var data = JSON.parse(res.body)
-          } catch (err) {
-            expect(err).to.not.exist
-          }
-
-          expect(data).to.have.property('d')
-          expect(data.d).to.have.property('Id')
-
-          endpointId = data.d.Id
-
-          done()
-
-        })
-
-      })
-
-    })
-
-    after( function (done) {
-
-      amsService.removeNotificationEndpoint(endpointId, function (err, res){
-
-        expect(err).to.not.exist
-        expect(res.statusCode).to.eql(204)
         done()
+        // var notificationEndpoint = {
+        //   Name:            'TestJobEndpoint2',
+        //   EndPointAddress: config.testQueueName
+        // }
+
+        // amsService.createNotificationEndpoint(notificationEndpoint, function (err, res){
+
+        //   expect(err).to.not.exist
+        //   expect(res.body).to.exist
+        //   expect(res.statusCode).to.eql(201)
+
+        //   try {
+        //     var data = JSON.parse(res.body)
+        //   } catch (err) {
+        //     expect(err).to.not.exist
+        //   }
+
+        //   expect(data).to.have.property('d')
+        //   expect(data.d).to.have.property('Id')
+
+        //   endpointId = data.d.Id
+
+        //   done()
+
+        // })
 
       })
 
     })
+
+    // after( function (done) {
+
+    //   amsService.removeNotificationEndpoint(endpointId, function (err, res){
+
+    //     expect(err).to.not.exist
+    //     expect(res.statusCode).to.eql(204)
+    //     done()
+
+    //   })
+
+    // })
 
 
     it('should create a video encoding job', function (done){
