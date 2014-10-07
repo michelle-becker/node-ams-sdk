@@ -1,5 +1,4 @@
 var expect     = require('chai').expect
-var moment     = require('moment')
 var AMSService = require('../')
 var config     = require('../test-config')
 
