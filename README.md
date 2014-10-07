@@ -254,6 +254,7 @@ Requires an assetId of the asset to be encoded, an options object, and a callbac
 
 
 * **Name**       - The name of the job
+* **Chained**    - Boolean true or false. If not provided, defaults to false. Will chain the tasks so they run in the order specified in the Tasks array.
 * **Tasks**      - An array of tasks options - each of with has the following properties:
 
     * **Configuration**    - String representation of encoding e.g. "H264 Broadband 720p"
