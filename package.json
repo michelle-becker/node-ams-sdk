@@ -1,11 +1,11 @@
 {
-  "name": "node-ams-sdk",
+  "name": "caa-ams-sdk",
   "version": "0.2.1",
   "description": "Client SDK for Azure Media Service",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:michelle-becker/node-ams-sdk.git"
+    "url": "git@github.com:caagency/caa-ams-sdk.git"
   },
   "dependencies": {
     "moment": "^2.6.0",
