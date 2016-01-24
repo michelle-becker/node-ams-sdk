@@ -316,3 +316,10 @@ Requires a jobId. Will return the tasks for the job. Will stream if optional cal
 ####getTaskOutput(taskId, [cb])
 
 Requires a taskId. Will return the task information. Will stream if optional callback is not provided.
+
+### Channels
+-------------
+
+####listChannels([cb])
+
+Takes an optional callback. Will list all channels - streaming if no cb.
